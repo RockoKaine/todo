@@ -1,3 +1,6 @@
+const btn = document.getElementById('enter'); 
+const left = document.getElementById('left'); 
+
 let items = [
     {
         title:"Hello World",
@@ -24,8 +27,29 @@ class Item {
 
 }
 
-const btn = document.getElementById('enter'); 
-const left = document.getElementById('left'); 
+items.forEach((i)=>{
+
+    left.innerHTML += `
+    <div class="item">
+                <div class="title">
+                    <h2>${i.title}</h2>
+                </div>
+                <div class="txt">
+                    ${i.text}
+                </div>
+                <div class="item-footer">
+                    <h5>12.12.2021 : ${i.tags}</h5>
+                    <div class="edit-delete">
+                        Edit / Delete
+                    </div>
+                </div>
+            </div>
+    
+    `
+
+})
+
+
 
 btn.addEventListener('click', ()=>{
     left.innerHTML += `
