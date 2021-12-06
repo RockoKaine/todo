@@ -1,0 +1,116 @@
+/* 
+note/todo app
+
+items should have:
+-title
+-content
+-date created
+-date completed
+-edit
+-delete
+
+When using - anything before that will be title, when using () make sub bullet point, a . will start a new list item.
+
+/delete title
+/show title
+/edit title
+/b [bolded]
+/e [emphasized]
+/notes filters notes
+/todo filters todo
+#searchWord if # used with other text it will tag the item
+
+
+
+use localstorage
+
+*/
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    background: linear-gradient(#360033, #0b8793);
+    height: 100%;
+    width: 100%;
+}
+header {
+    color: whitesmoke;
+    height: 10%;
+    width: 100%;
+    font-family: 'Pacifico', cursive;
+    font-size: 3.5rem;
+    text-align: center;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 26px;;
+    height: 75%;
+    width: 75%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 2px 2px 11px 2px rgba(0, 0, 0, 0.75);
+
+}
+
+#left{
+    height: 100%;
+    width: 80%;
+}
+
+.item {
+    color: whitesmoke;
+}
+
+.item * {
+    margin: 15px;
+}
+.item-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#right{
+    height: 95%;
+    width: 20%;
+    border-left: solid 3px whitesmoke;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 26px;
+}
+#control-input {
+    background: none;
+    width: 90%;
+    font-size: 2rem;
+    padding: 10px;
+    border: none;
+    border-bottom: solid 3px #f5f5f5;
+    
+}
+#control-input:focus {
+   outline: none;
+   caret-color: whitesmoke;
+}
+
+button{
+    background: none;
+    border: none;
+    font-size: 1.9rem;
+    color: yellowgreen;
+}
