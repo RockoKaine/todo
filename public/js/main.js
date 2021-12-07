@@ -1,72 +1,66 @@
 const btn = document.getElementById('enter'); 
 const left = document.getElementById('left'); 
+const inputField = document.getElementById('control-input');
 
-let items = [
-    {
-        title:"Hello World",
-        text:"Why not a good ol' hello world to get things rolling!",
-        tags:'cats'
-    },
-    {
-        title:"Hello Fart",
-        text:"sgsfgsfgsfdg",
-        tags:"red"
-    },
-    {
-        title:"Hello Gut",
-        text:"fogfdg not a good ol' hello world to get things rolling!",
-        tags:'cats'
-    }
-];
+// let items = [
+   
+// ];
+
+localStorage.setItem('items','');
+// localStorage.setItem('items',JSON.stringify({
+//     cat:'mewo',
+//     dog:'bark'
+// }));
 class Item {
     constructor(title, text, tags){
         this.title = title;
         this.text = text;
         this.tags = tags;
     }
+    dateAdd = new Date().toLocaleDateString();
+
+    // static so we can use method without instantiation
+    static show(arr){
+        arr.forEach((i)=>{
+    
+            left.innerHTML += `
+            <div class="item">
+                        <div class="title">
+                            <h2>${i.title}</h2>
+                        </div>
+                        <div class="txt">
+                            ${i.text}
+                        </div>
+                        <div class="item-footer">
+                            <h5>${i.dateAdd} : ${i.tags}</h5>
+                            <div class="edit-delete">
+                                Edit / Delete
+                            </div>
+                        </div>
+                    </div>
+            `
+        })
+    
+    }
+
+    static addItem(newItem){
+        localStorage.items += JSON.stringify(newItem);
+        left.innerHTML="";
+        // this.show(localStorage.items);
+    }
 
 }
 
-items.forEach((i)=>{
-
-    left.innerHTML += `
-    <div class="item">
-                <div class="title">
-                    <h2>${i.title}</h2>
-                </div>
-                <div class="txt">
-                    ${i.text}
-                </div>
-                <div class="item-footer">
-                    <h5>12.12.2021 : ${i.tags}</h5>
-                    <div class="edit-delete">
-                        Edit / Delete
-                    </div>
-                </div>
-            </div>
-    
-    `
-
-})
 
 
 
+
+
+
+let cnt = 0;
 btn.addEventListener('click', ()=>{
-    left.innerHTML += `
-    <div class="item">
-                <div class="title">
-                    <h2>mog</h2>
-                </div>
-                <div class="txt">
-                    ${document.getElementById('control-input').value}
-                </div>
-                <div class="item-footer">
-                    <h5>12.12.2021</h5>
-                    <div class="edit-delete">
-                        Edit / Delete
-                    </div>
-                </div>
-            </div>
+    cnt++;
+    let newItem = new Item(`Title ${cnt}`, inputField.value, `tag${cnt}`);
+    Item.addItem(newItem);
     
-    `
 })
