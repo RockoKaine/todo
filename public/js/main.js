@@ -6,11 +6,19 @@ const inputField = document.getElementById('control-input');
 let entries = [];
 
 
+
+
+
+function myAlert(){
+    alert('hi')
+}
 // functions
 
 function addEntry(item){
+    let regExpr = /\B(\#[a-zA-Z]+\b)(?!;)/g
     let itemTitle = item.substring(0, item.indexOf('--'));
     let itemText = item.substring(item.indexOf('--') + 2);
+    let tags = item.match(regExpr);
 
     if(item !== ''){
         const entry = { 
@@ -18,6 +26,7 @@ function addEntry(item){
             dateAdd: new Date().toDateString(),
             title: itemTitle,
             text: itemText,
+            tags: tags,
             completed: false
         };
 
@@ -40,17 +49,17 @@ function renderEntries(entries){
         //seeing if entry is completed
         const checked = item.completed ? 'checked' : null;
 
-        const itemWrapper = document.createElement('div');
+        // const itemWrapper = document.createElement('div');
 
-        itemWrapper.setAttribute('class', 'item');
-        itemWrapper.setAttribute('data-key', item.id);
+        // itemWrapper.setAttribute('class', 'item');
+        // itemWrapper.setAttribute('data-key', item.id);
         
-        if(item.completed === true){
-            itemWrapper.classList.add('checked');
-        }
+        // if(item.completed === true){
+        //     itemWrapper.classList.add('checked');
+        // }
 
         left.innerHTML += `
-    <div class="item">
+    <div class="item" data-key=${item.id}>
                 <div class="title">
                     <h2>${item.title}</h2>
                 </div>
@@ -60,19 +69,19 @@ function renderEntries(entries){
                 <div class="item-footer">
                     <h5>${item.dateAdd} : ${item.tags}</h5>
                     <div class="edit-delete">
-                        Edit / Delete
+                        Edit / <span id="delete-btn" onclick="deleteEntry()" data-key=${item.id}>Delete</span>
                     </div>
                 </div>
             </div>
     `
 
-      left.append(itemWrapper);
+    //   left.append(itemWrapper);
     });
 }
 
 
 function addToLocalStorage(entries){
-    //convert the array to a string
+    //convert the array to a string                     
     localStorage.setItem('entries', JSON.stringify(entries));
 
     // render to screen
@@ -89,6 +98,17 @@ function getFromLocalStorage(){
     }
 }
 getFromLocalStorage();
+
+
+function deleteEntry(){
+console.log(event.target.attributes[2].value)
+let id = event.target.attributes[2].value;
+    entries = entries.filter((item)=>{
+        // types are dif, so not using !==
+        return item.id != id;
+    });
+    addToLocalStorage(entries);
+}
 
 // add an eventListener on form, and listen for submit event
 inputForm.addEventListener('submit', function(event) {
