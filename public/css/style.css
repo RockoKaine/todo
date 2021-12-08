@@ -36,6 +36,7 @@ html, body {
     background: linear-gradient(#360033, #0b8793);
     height: 100%;
     width: 100%;
+    color: white;
 }
 header {
     color: whitesmoke;
