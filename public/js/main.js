@@ -7,28 +7,7 @@ const userAlert = document.getElementById('user-alert');
 let entries = [];
 
 
-
-
-
-
-
-// function updateEntry(){
-//     const editForm = document.getElementById('edit-form');
-//     // addEntry(inputField.value);
-
-//     editForm.addEventListener('submit', ()=>{
-//         event.preventDefault();
-//         console.log('edit submitted')
-//     });
-// }
-
-
-
-
-
-// functions
-
-//
+// remove edit button, instead clicking on item will display and have editable
 
 function detectCommands(){
     
@@ -150,15 +129,8 @@ getFromLocalStorage();
 
 
 
-
 function editEntry(identifier){
-
-    
-
     entries.forEach((entry=>{
-
-
-
         
         if(identifier == entry.id){
             console.log(`identifier == entry.id: ${identifier == entry.id}`)
@@ -167,9 +139,9 @@ function editEntry(identifier){
                 left.innerHTML = `
                 <div class="item" data-key=${entry.id}>
                             
-                            <form id="edit-form">
+                            <form id="edit-form" data-key=${entry.id}>
                             <input type="text" id="edit-title" value="${entry.title}" autofocus>
-                            <textarea style="resize:none;" name="" id="" cols="30" rows="10">${entry.text}</textarea>
+                            <textarea style="resize:none;" name="" id="edit-text" cols="30" rows="10">${entry.text}</textarea>
                         <button type="submit" id="enter">Enter</button>
                       </form>
                             <div class="item-footer">
@@ -188,7 +160,7 @@ function editEntry(identifier){
                 left.innerHTML = `
                 <div class="item" data-key=${entry.id}>
                             
-                            <form id="edit-form">
+                            <form id="edit-form" data-key=${entry.id}>
                             <input type="text" id="edit-title" value="${entry.title}" autofocus>
                             <textarea style="resize:none;" name="" id="edit-text" cols="30" rows="10">${entry.text}</textarea>
                         <button type="submit" id="enter">Enter</button>
@@ -213,11 +185,17 @@ function editEntry(identifier){
     
     editForm.addEventListener('submit', ()=>{
         event.preventDefault();
-        console.log('edit submitted')
-        entry.title = editTitleInput.value;
+        entries.forEach(item =>{
+            if(item.id == editForm.getAttribute('data-key')){
+                console.log(`Title : ${item.title} || Title value: ${editTitleInput.value}`)
+                console.log(`Text : ${item.text} || Text value: ${editTextInput.value}`)
+                item.title = editTitleInput.value;
+                item.text = editTextInput.value;
+            }
+        })
 
-        // need to also remove old item and replace it
-        // addEntry(`${editTitleInput.value}-- Bug`);
+        addToLocalStorage(entries);
+
     });
 
 }
@@ -255,6 +233,9 @@ entries.forEach((entry=>{
 
 
 
+function stylizeText(text){
+    // search text and return text with style
+}
 
 
 
