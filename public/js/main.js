@@ -3,18 +3,74 @@ const left = document.getElementById('left');
 const inputForm = document.querySelector('.todo-form');
 const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
+const userAlert = document.getElementById('user-alert');
 let entries = [];
 
 
 
 
 
-function myAlert(){
-    alert('hi')
-}
+
+
+// function updateEntry(){
+//     const editForm = document.getElementById('edit-form');
+//     // addEntry(inputField.value);
+
+//     editForm.addEventListener('submit', ()=>{
+//         event.preventDefault();
+//         console.log('edit submitted')
+//     });
+// }
+
+
+
+
+
 // functions
 
+//
+
+function detectCommands(){
+    
+    
+}
+
+function submitHandler(){
+    // searching for /commands
+    let regExpr = /\B(\/[a-zA-Z]+\b)(?!;)/g
+
+    inputForm.addEventListener('submit', ()=>{
+        event.preventDefault();
+
+        if(inputField.value[0] == '/'){
+            switch(inputField.value.match(regExpr)[0]){
+
+                case '/delete':
+                    deleteEntry(event.target.elements[0].value.slice(8))
+                    break;
+
+                case '/edit':
+                    console.log('edit typed')
+                    editEntry(event.target.elements[0].value.slice(6))
+                    break;
+
+                case '/help':
+                    console.log(`What do you need`)
+                    break;
+                default:
+                    console.log("defaulted")
+            }
+
+        } else {
+            addEntry(inputField.value);
+        }
+
+    })
+}
+
 function addEntry(item){
+    
+
     let regExpr = /\B(\#[a-zA-Z]+\b)(?!;)/g
     let itemTitle = item.substring(0, item.indexOf('--'));
     let itemText = item.substring(item.indexOf('--') + 2);
@@ -38,25 +94,10 @@ function addEntry(item){
 
 function renderEntries(entries){
 
-    
-
-
-
-
-
     left.innerHTML = "";
     entries.forEach((item)=>{
         //seeing if entry is completed
         const checked = item.completed ? 'checked' : null;
-
-        // const itemWrapper = document.createElement('div');
-
-        // itemWrapper.setAttribute('class', 'item');
-        // itemWrapper.setAttribute('data-key', item.id);
-        
-        // if(item.completed === true){
-        //     itemWrapper.classList.add('checked');
-        // }
 
         left.innerHTML += `
     <div class="item" data-key=${item.id}>
@@ -69,13 +110,11 @@ function renderEntries(entries){
                 <div class="item-footer">
                     <h5>${item.dateAdd} : ${item.tags}</h5>
                     <div class="edit-delete">
-                        Edit / <span id="delete-btn" onclick="deleteEntry()" data-key=${item.id}>Delete</span>
+                    <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${item.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${item.id}>Delete</span>
                     </div>
                 </div>
             </div>
     `
-
-    //   left.append(itemWrapper);
     });
 }
 
@@ -100,21 +139,165 @@ function getFromLocalStorage(){
 getFromLocalStorage();
 
 
-function deleteEntry(){
-console.log(event.target.attributes[2].value)
-let id = event.target.attributes[2].value;
-    entries = entries.filter((item)=>{
-        // types are dif, so not using !==
-        return item.id != id;
+
+
+
+
+
+
+
+
+
+
+
+
+function editEntry(identifier){
+
+    
+
+    entries.forEach((entry=>{
+
+
+
+        
+        if(identifier == entry.id){
+            console.log(`identifier == entry.id: ${identifier == entry.id}`)
+            console.log(`edit identifier is: ${identifier}`);
+            
+                left.innerHTML = `
+                <div class="item" data-key=${entry.id}>
+                            
+                            <form id="edit-form">
+                            <input type="text" id="edit-title" value="${entry.title}" autofocus>
+                            <textarea style="resize:none;" name="" id="" cols="30" rows="10">${entry.text}</textarea>
+                        <button type="submit" id="enter">Enter</button>
+                      </form>
+                            <div class="item-footer">
+                                <h5>${entry.dateAdd} : ${entry.tags}</h5>
+                                <div class="edit-delete">
+                                <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                                </div>
+                            </div>
+                        </div>
+                `;
+                console.log(entry.title)
+                
+        } else if(identifier == entry.title){
+            console.log(`identifier == entry.title: ${identifier == entry.title}`)
+
+                left.innerHTML = `
+                <div class="item" data-key=${entry.id}>
+                            
+                            <form id="edit-form">
+                            <input type="text" id="edit-title" value="${entry.title}" autofocus>
+                            <textarea style="resize:none;" name="" id="edit-text" cols="30" rows="10">${entry.text}</textarea>
+                        <button type="submit" id="enter">Enter</button>
+                      </form>
+                            <div class="item-footer">
+                                <h5>${entry.dateAdd} : ${entry.tags}</h5>
+                                <div class="edit-delete">
+                                <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                                </div>
+                            </div>
+                        </div>
+                `;
+                console.log(entry.title)
+            
+        } 
+        
+    }))
+
+    const editForm = document.getElementById('edit-form');
+    const editTitleInput = document.getElementById('edit-title');
+    const editTextInput = document.getElementById('edit-text');
+    
+    editForm.addEventListener('submit', ()=>{
+        event.preventDefault();
+        console.log('edit submitted')
+        entry.title = editTitleInput.value;
+
+        // need to also remove old item and replace it
+        // addEntry(`${editTitleInput.value}-- Bug`);
     });
+
+}
+
+
+
+
+
+function deleteEntry(identifier){
+
+
+entries.forEach((entry=>{
+    if(identifier == entry.id){
+        console.log(`delete identifier is: ${identifier}`);
+        entries = entries.filter((item)=>{
+            userAlert.innerText = `Deleted ${item.title}`
+                    // types are dif, so not using !==
+                    return item.id != identifier;
+                });
+    } else if(identifier == entry.title){
+        entries = entries.filter((item)=>{
+            userAlert.innerText = `Deleted ${item.title}`
+                    return item.title != identifier;
+                });
+    } else {
+        userAlert.innerText = 'Could not delete that!'
+    }
+}))
     addToLocalStorage(entries);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // add an eventListener on form, and listen for submit event
 inputForm.addEventListener('submit', function(event) {
     // prevent the page from reloading when submitting the form
     event.preventDefault();
-    addEntry(inputField.value); // call addTodo function with input box current value
+    submitHandler();
+    //addEntry(inputField.value); // call addTodo function with input box current value
   });
 
 
@@ -125,85 +308,3 @@ inputForm.addEventListener('submit', function(event) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// class Item {
-//     constructor(title, text, tags){
-//         this.title = title;
-//         this.text = text;
-//         this.tags = tags;
-//     }
-//     dateAdd = new Date().toLocaleDateString();
-
-//     // static so we can use method without instantiation
-//     static show(arr){
-        
-//         arr.forEach((i)=>{
-    
-            // left.innerHTML += `
-            // <div class="item">
-            //             <div class="title">
-            //                 <h2>${i.title}</h2>
-            //             </div>
-            //             <div class="txt">
-            //                 ${i.text}
-            //             </div>
-            //             <div class="item-footer">
-            //                 <h5>${i.dateAdd} : ${i.tags}</h5>
-            //                 <div class="edit-delete">
-            //                     Edit / Delete
-            //                 </div>
-            //             </div>
-            //         </div>
-            // `
-//         })
-    
-//     }
-
-//     static addItem(newItem){
-//         localStorage.items +=  newItem;
-//         itemArr = localStorage.getItem('items')
-//         left.innerText = itemArr;
-//         return itemArr;
-//         // left.innerHTML="";
-//         // this.show(JSON.parse(localStorage.getItem("items")));
-//     }
-
-// }
-
-
-
-
-
-
-
-// let cnt = 0;
-// btn.addEventListener('click', ()=>{
-//     cnt++;
-//     let newItem = new Item(`Title ${cnt}`, inputField.value, `tag${cnt}`);
-//     Item.addItem(JSON.stringify(newItem));
-    
-    
-// })
