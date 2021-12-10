@@ -7,10 +7,21 @@ const userAlert = document.getElementById('user-alert');
 let entries = [];
 
 
-// remove edit button, instead clicking on item will display and have editable
+// need to made the content escaped
+// when updating add new hash tags when needed
+
+
+
 
 function detectCommands(){
     
+    
+}
+
+function toggleHeight(){
+    // console.log(event)
+    
+
     
 }
 
@@ -43,7 +54,7 @@ function submitHandler(){
         } else {
             addEntry(inputField.value);
         }
-
+        inputField.value = "";
     })
 }
 
@@ -74,27 +85,28 @@ function addEntry(item){
 function renderEntries(entries){
 
     left.innerHTML = "";
-    entries.forEach((item)=>{
+    for(let i = entries.length - 1; i > 0; i--){
         //seeing if entry is completed
-        const checked = item.completed ? 'checked' : null;
+        // const checked = entries[i].completed ? 'checked' : null;
 
         left.innerHTML += `
-    <div class="item" data-key=${item.id}>
+    <div class="item" data-key=${entries[i].id} onclick="toggleHeight(this)">
                 <div class="title">
-                    <h2>${item.title}</h2>
+                    <h2>${entries[i].title}</h2>
                 </div>
                 <div class="txt">
-                    ${item.text}
+                    ${entries[i].text}
                 </div>
                 <div class="item-footer">
-                    <h5>${item.dateAdd} : ${item.tags}</h5>
+                    <h5>${entries[i].dateAdd} : ${entries[i].tags}</h5>
                     <div class="edit-delete">
-                    <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${item.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${item.id}>Delete</span>
+                    <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entries[i].id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entries[i].id}>Delete</span>
                     </div>
                 </div>
             </div>
     `
-    });
+
+    }
 }
 
 
@@ -287,5 +299,21 @@ inputForm.addEventListener('submit', function(event) {
 
 
 
+document.addEventListener('click', (event)=>{
+    if(event.target.closest('.item')){
+        let curItem = document.querySelector(`[data-key='${event.target.closest('.item').dataset.key}']`);
+        
 
+    // if(event.target !== this || event.target === this){
+        if(curItem.classList[1] !== 'expand-height'){
+            curItem.classList.remove('contract-height');
+            curItem.classList.add('expand-height');
+        } else {
+            curItem.classList.remove('expand-height');
+            curItem.classList.add('contract-height');
+        }
+
+    } 
+    
+})
 

@@ -14,26 +14,30 @@ When using - anything before that will be title, when using () make sub bullet p
 /delete title
 /show title
 /edit title
-/b [bolded]
-/e [emphasized]
+
 /notes filters notes
 /todo filters todo
 #searchWord if # used with other text it will tag the item
 
+in note commands:
+    <li First thing-- Second -- Third> ** this is a list 
+    <b Bold me!> ** this will bee bold
+    <e this will be italics>
 
-
-use localstorage
 
 */
-@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Saira:wght@300&display=swap');
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Saira', sans-serif;
 }
 
 html, body {
     background: linear-gradient(#360033, #0b8793);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     height: 100%;
     width: 100%;
     color: white;
@@ -50,6 +54,7 @@ header {
 body{
     display: flex;
     flex-direction: column;
+    font-family: 'Saira', sans-serif;
 }
 
 .container {
@@ -66,8 +71,16 @@ body{
 }
 
 #left{
-    height: 100%;
+    height: 95%;
     width: 80%;
+    padding: 20px;
+    overflow: scroll;
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    overflow-y: scroll; 
+}
+#left::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
 }
 
 #user-alert{
@@ -81,6 +94,34 @@ body{
 
 .item {
     color: whitesmoke;
+    border-bottom: dashed 1px rgb(126, 126, 126);
+    height: 26%;
+    z-index: 5;
+}
+
+.expand-height {
+    animation: height-grow 0.75s ease-in forwards;
+    
+}
+@keyframes height-grow {
+    from {
+        height: 26%;
+    }
+    to{
+        height: 90%;
+    }
+}
+.contract-height {
+    animation: height-contract .75s ease-in forwards;
+    
+}
+@keyframes height-contract {
+    from {
+        height: 90%;
+    }
+    to{
+        height: 26%;
+    }
 }
 
 .item * {
@@ -89,6 +130,7 @@ body{
 .item-footer {
     display: flex;
     justify-content: space-between;
+    height: 10%;
 }
 
 
@@ -99,14 +141,18 @@ body{
 }
 
 footer {
+    padding: 0 15px 30px 15px;
+    width: 100%;
+}
+
+.todo-form {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 26px;
 }
 #control-input {
+    width: 85%;
     background: none;
-    width: 90%;
     font-size: 2rem;
     padding: 10px;
     border: none;
@@ -119,8 +165,71 @@ footer {
 }
 
 button{
-    background: none;
-    border: none;
-    font-size: 1.9rem;
+    background: #353535;
+    border: solid 2px whitesmoke;
+    border-radius: 26px;
+    height: 45px;
+    width: 120px;
+    font-size: 1.75rem;
     color: yellowgreen;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75)
+}
+
+button:hover {
+    filter: brightness(1.5);
+}
+
+button:active{
+    scale: 0.95;
+
+}
+
+#edit-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background: rgba(255, 255, 255, .4); */
+    height:80%;
+    border-radius: 15px;
+    background: rgba(11, 135, 147, 1);
+    border: solid 2px whitesmoke;
+}
+
+#edit-form textarea{
+    height: 70%;
+}
+#edit-form textarea, #edit-title{
+    border: none;
+    background: rgba(54, 0, 51, 0.5);
+    box-shadow: inset 0 0 25px 15px rgba(0, 0, 0, 0.25);
+    padding: 15px;
+    color: whitesmoke;
+    font-size: 1.25rem;
+    width: 95%;
+}
+#edit-form textarea:focus{
+    outline: none;
+}
+
+#delete-btn {
+    color: #ee0000;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+#delete-btn:hover{
+    filter: brightness(.85);
+}
+#edit-btn {
+    color: #eeb600;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+#edit-btn:hover{
+    filter: brightness(.85);
 }
