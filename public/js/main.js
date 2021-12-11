@@ -4,6 +4,7 @@ const inputForm = document.querySelector('.todo-form');
 const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
 const userAlert = document.getElementById('user-alert');
+let titleCount = 0;
 let entries = [];
 
 
@@ -11,19 +12,25 @@ let entries = [];
 // when updating add new hash tags when needed
 
 
+function textHandler(text){
 
+    let regExpr = /\B(\#[a-zA-Z]+\b)(?!;)/g
+    text = text.match(regExpr);
+    return text;
 
-function detectCommands(){
-    
-    
 }
 
-function toggleHeight(){
-    // console.log(event)
-    
 
-    
+function titleCounter(text){
+
+    titleCount = entries.filter(item => item.name === text).length;
+
+    console.log(`Name: ${item.name}`)
+    if(titleCount > 0){
+        return `${text} ${titleCount + 1}`
+    }
 }
+
 
 function submitHandler(){
     // searching for /commands
@@ -59,20 +66,17 @@ function submitHandler(){
 }
 
 function addEntry(item){
-    
 
-    let regExpr = /\B(\#[a-zA-Z]+\b)(?!;)/g
     let itemTitle = item.substring(0, item.indexOf('--'));
     let itemText = item.substring(item.indexOf('--') + 2);
-    let tags = item.match(regExpr);
 
     if(item !== ''){
         const entry = { 
             id: Date.now(),
             dateAdd: new Date().toDateString(),
-            title: itemTitle,
+            title: itemTitle !== "" ? itemTitle : itemTitle = titleCounter('Untitled'),
             text: itemText,
-            tags: tags,
+            tags: textHandler(item),
             completed: false
         };
 
@@ -201,8 +205,10 @@ function editEntry(identifier){
             if(item.id == editForm.getAttribute('data-key')){
                 console.log(`Title : ${item.title} || Title value: ${editTitleInput.value}`)
                 console.log(`Text : ${item.text} || Text value: ${editTextInput.value}`)
-                item.title = editTitleInput.value;
+                editTitleInput.value !== "" ? item.title = editTitleInput.value : item.title = 'Untitled';
+                
                 item.text = editTextInput.value;
+                item.tags = textHandler(editTextInput.value);
             }
         })
 
