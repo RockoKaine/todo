@@ -6,7 +6,7 @@ const inputField = document.getElementById('control-input');
 const userAlert = document.getElementById('user-alert');
 let titleCount = 0;
 let entries = [];
-
+titleCount = entries.filter(item => item.name === text).length;
 
 // need to made the content escaped
 // when updating add new hash tags when needed
@@ -25,7 +25,6 @@ function titleCounter(text){
 
     titleCount = entries.filter(item => item.name === text).length;
 
-    console.log(`Name: ${item.name}`)
     if(titleCount > 0){
         return `${text} ${titleCount + 1}`
     }
