@@ -4,7 +4,7 @@ const inputForm = document.querySelector('.todo-form');
 const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
 const userAlert = document.getElementById('user-alert');
-let titleCount = 0;
+
 let entries = [];
 titleCount = entries.filter(item => item.name === text).length;
 
@@ -21,13 +21,24 @@ function textHandler(text){
 }
 
 
+
+let untitledCount = 0;
+
 function titleCounter(text){
-
-    titleCount = entries.filter(item => item.name === text).length;
-
-    if(titleCount > 0){
-        return `${text} ${titleCount + 1}`
+    if(text === "Untitled"){
+        console.log(entries)
+        entries.forEach(item =>{
+            console.log(item.title)
+            if(item.title.slice(0,8) === "Untitled"){
+                untitledCount++;
+                let newTitle = 'Untitled ' + untitledCount;
+                text = newTitle;
+            }
+        })
+        untitledCount = 0;
     }
+    return text
+    
 }
 
 
@@ -68,12 +79,14 @@ function addEntry(item){
 
     let itemTitle = item.substring(0, item.indexOf('--'));
     let itemText = item.substring(item.indexOf('--') + 2);
-
+        itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("Untitled")     
     if(item !== ''){
         const entry = { 
             id: Date.now(),
             dateAdd: new Date().toDateString(),
-            title: itemTitle !== "" ? itemTitle : itemTitle = titleCounter('Untitled'),
+            // title: titleCounter('Untitled'),
+            title: itemTitle,
+
             text: itemText,
             tags: textHandler(item),
             completed: false
