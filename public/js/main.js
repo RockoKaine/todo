@@ -23,34 +23,47 @@ function textHandler(text){
 
 
 
-function titleCounter(text){
-    let untitledCount = 0;
-    if(text === "Untitled"){
-        entries.forEach(item =>{
-            console.log(item.title);
-            const numRegEx = /\d+$/;
-            let untitledNum = item.title.match(numRegEx);
-            // need to search all titles....
-            // then check to see what begins with untitled
-            // grab the end number if it exist, push exist number to arr
-            // then get biggest number in array and add 1
-            let numArr = [];
-            numArr.push(untitledNum[0]);
-            if(item.title.slice(0,8) === "Untitled"){
-                
-                untitledCount++;
-                newCount = Math.max(...numArr);
-                let newTitle = newCount > 1 ? 'Untitled' : `Untitled ${newCount + 1}`;
-                // let newTitle = 'Untitled ' + newCount + 1;
+// titleCounter checks the titles to see if there are any duplicate titles and appends a number to the repeat title
 
-                text = newTitle;
+function titleCounter(text){
+    let numberArr = [];
+    let duplicateCount = 0;
+    const endNumRegEx = /\d+$/;
+
+    // if the text is untitled we find all instances of untitled entries,
+    // then if there is more thant one entry we update the title to be Untitled 2... 
+    // if there are no other untitled entries we just return Untitled
+    if(text === ""){
+        entries.forEach(entry =>{
+            let curTitle = entry.title;
+            if(curTitle.slice(0,8) === 'Untitled' && curTitle.length > 8){
+                let endingNumber = curTitle.match(endNumRegEx)[0];
+                numberArr.push(endingNumber);
+                duplicateCount++;
+            } else if(curTitle === 'Untitled'){
+                numberArr.push(1)
+                duplicateCount++
             }
         })
-        untitledCount = 0;
+        text = duplicateCount > 0 ? `Untitled ${Math.max(...numberArr) + 1}` : `Untitled`;
+        return text
+    } else {
+        entries.forEach(entry =>{
+            let curTitle = entry.title;
+            if(text === curTitle.slice(0, text.length) && curTitle.length > text.length ){
+                let endingNumber = curTitle.match(endNumRegEx)[0];
+                numberArr.push(endingNumber);
+                duplicateCount++;                
+            } else if(curTitle === text){
+                numberArr.push(1)
+                duplicateCount++
+            }
+        })
+        text = duplicateCount > 0 ? `${text} ${Math.max(...numberArr) + 1}` : text;
+        return text
     }
-    return text
-    
 }
+
 
 
 function submitHandler(){
@@ -89,8 +102,13 @@ function submitHandler(){
 function addEntry(item){
 
     let itemTitle = item.substring(0, item.indexOf('--'));
-    let itemText = item.substring(item.indexOf('--') + 2);
-        itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("Untitled")     
+    let itemText = item.substring(item.indexOf('--')).replace('--','');
+
+
+
+
+
+        itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("")     
     if(item !== ''){
         const entry = { 
             id: Date.now(),
