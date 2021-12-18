@@ -22,16 +22,27 @@ function textHandler(text){
 
 
 
-let untitledCount = 0;
 
 function titleCounter(text){
+    let untitledCount = 0;
     if(text === "Untitled"){
-        console.log(entries)
         entries.forEach(item =>{
-            console.log(item.title)
+            console.log(item.title);
+            const numRegEx = /\d+$/;
+            let untitledNum = item.title.match(numRegEx);
+            // need to search all titles....
+            // then check to see what begins with untitled
+            // grab the end number if it exist, push exist number to arr
+            // then get biggest number in array and add 1
+            let numArr = [];
+            numArr.push(untitledNum[0]);
             if(item.title.slice(0,8) === "Untitled"){
+                
                 untitledCount++;
-                let newTitle = 'Untitled ' + untitledCount;
+                newCount = Math.max(...numArr);
+                let newTitle = newCount > 1 ? 'Untitled' : `Untitled ${newCount + 1}`;
+                // let newTitle = 'Untitled ' + newCount + 1;
+
                 text = newTitle;
             }
         })
@@ -101,7 +112,7 @@ function addEntry(item){
 function renderEntries(entries){
 
     left.innerHTML = "";
-    for(let i = entries.length - 1; i > 0; i--){
+    for(let i = entries.length - 1; i >= 0; i--){
         //seeing if entry is completed
         // const checked = entries[i].completed ? 'checked' : null;
 
