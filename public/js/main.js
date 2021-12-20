@@ -12,7 +12,9 @@ titleCount = entries.filter(item => item.name === text).length;
 // when updating add new hash tags when needed
 
 
-function textHandler(text){
+
+
+function tagHandler(text){
 
     let regExpr = /\B(\#[a-zA-Z]+\b)(?!;)/g
     text = text.match(regExpr);
@@ -21,6 +23,16 @@ function textHandler(text){
 }
 
 
+function hashTagFilter(hashtag){
+    let filteredRes = [];
+    entries.forEach(entry =>{
+      if(entry.tags.includes(hashtag)){
+        filteredRes.push(entry)
+      }
+    })
+    return filteredRes
+  
+  }
 
 
 // titleCounter checks the titles to see if there are any duplicate titles and appends a number to the repeat title
@@ -88,6 +100,12 @@ function submitHandler(){
                 case '/help':
                     console.log(`What do you need`)
                     break;
+                case '/filter':
+                    renderEntries(hashTagFilter(event.target.elements[0].value.slice(8)))
+                    break;
+                case '/home':
+                    renderEntries(entries)
+                    break;
                 default:
                     console.log("defaulted")
             }
@@ -103,21 +121,16 @@ function addEntry(item){
 
     let itemTitle = item.substring(0, item.indexOf('--'));
     let itemText = item.substring(item.indexOf('--')).replace('--','');
-
-
-
-
-
-        itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("")     
+    itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("")     
+    
     if(item !== ''){
         const entry = { 
             id: Date.now(),
             dateAdd: new Date().toDateString(),
-            // title: titleCounter('Untitled'),
             title: itemTitle,
-
             text: itemText,
-            tags: textHandler(item),
+            tags: tagHandler(item),
+            todoItem: false,
             completed: false
         };
 
@@ -127,6 +140,41 @@ function addEntry(item){
     }
 }
 
+
+
+function textMarkup(text){
+    // Looking for <li Anything that goes in here  >
+    let regExLi = /<li(.*)>/g;
+    // Searching the text for the list item
+    
+    
+    // take each item in list array and place them in a ul as li
+    
+    if(text.match(regExLi)){
+        let theList = ``;
+        let listArr = text.match(regExLi)[0].substring(3,text.match(regExLi)[0].length - 1).split("**");
+        listArr.forEach(listItem =>{
+            console.log('list item ',listItem)
+            theList += `<li>${listItem}</li>`;
+        });
+    
+        
+    
+            text = text.replace(regExLi, `<ul>${theList}</ul>`);
+            return text;
+        
+    }
+
+    else {
+        return text;
+    }
+
+}
+
+
+
+
+
 function renderEntries(entries){
 
     left.innerHTML = "";
@@ -135,12 +183,12 @@ function renderEntries(entries){
         // const checked = entries[i].completed ? 'checked' : null;
 
         left.innerHTML += `
-    <div class="item" data-key=${entries[i].id} onclick="toggleHeight(this)">
+    <div class="item" data-key=${entries[i].id}">
                 <div class="title">
                     <h2>${entries[i].title}</h2>
                 </div>
-                <div class="txt">
-                    ${entries[i].text}
+                <div class="txt" id="txt">
+                    ${textMarkup(entries[i].text)}
                 </div>
                 <div class="item-footer">
                     <h5>${entries[i].dateAdd} : ${entries[i].tags}</h5>
@@ -292,9 +340,7 @@ entries.forEach((entry=>{
 
 
 
-function stylizeText(text){
-    // search text and return text with style
-}
+
 
 
 
@@ -349,7 +395,10 @@ inputForm.addEventListener('submit', function(event) {
 document.addEventListener('click', (event)=>{
     if(event.target.closest('.item')){
         let curItem = document.querySelector(`[data-key='${event.target.closest('.item').dataset.key}']`);
-        
+
+        // targeting the entry text need to size it on click to hide and unhide text.
+        let entryTxt = document.getElementById('txt');
+        console.log(curItem)
 
     // if(event.target !== this || event.target === this){
         if(curItem.classList[1] !== 'expand-height'){
