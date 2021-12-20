@@ -94,8 +94,13 @@ body{
 
 .item {
     color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     border-bottom: dashed 1px rgb(126, 126, 126);
-    height: 26%;
+    margin-bottom: 50px;
+    height: 35%;
+    overflow: hidden;
     z-index: 5;
 }
 
@@ -105,7 +110,7 @@ body{
 }
 @keyframes height-grow {
     from {
-        height: 26%;
+        height: 35%;
     }
     to{
         height: 90%;
@@ -120,19 +125,31 @@ body{
         height: 90%;
     }
     to{
-        height: 26%;
+        height: 35%;
     }
 }
 
 .item * {
     margin: 15px;
 }
+
+#edit-form *{
+    margin: 15px;
+}
+
 .item-footer {
     display: flex;
     justify-content: space-between;
-    height: 10%;
+    /* align-items: end; */
+    padding: 10px;
+    height: 50px;
 }
 
+#txt {
+    /* height: 26%; */
+    height: 100%;
+    overflow: hidden;
+}
 
 #right{
     height: 95%;
@@ -143,6 +160,7 @@ body{
 footer {
     padding: 0 15px 30px 15px;
     width: 100%;
+    
 }
 
 .todo-form {

@@ -6,6 +6,40 @@ const inputField = document.getElementById('control-input');
 const userAlert = document.getElementById('user-alert');
 
 let entries = [];
+
+const helpTxt = `
+                    Welcome to my note and todo app. Over the years as I have used the terminal more, and hobbied with coding I have grown fond of running commands by text. So I took that approach with this project. I included a few mouse interactions, but everything can be controlled completely by text.
+
+                    Commands:
+
+                    /help (At anytime return here for a list of commands)
+
+                    /filter #SomeHashTag (Use this to filter through for entries with specific tags)
+
+                    /edit My Title (This command allows you to edit the specified post)
+
+                    /uncomplete My Title (Uncompletes the entry by unchecking your last checked item)
+
+                    /delete My Title (This command allows you to delete the specified post)
+
+                    /home (Home Command will bring you back to the home page of all of your entries)
+
+                    /history (This will enlarge the history are of all your completed list)
+
+                    Creating an entry:
+
+                    All titles must be unique, in the event you reuse a title the apropriate number will be appended. To title you entry type your desired text followed by -- (This is my Title--). Note a title is not required. If you do not specify a title it will be named Untitled.
+                    
+                    Anything after the -- Will be body text. If you did not give the entry a title anything you type will automatically be body text. You may find yourself needing to stylize your text, these are available: <b bold text > <i italic text > <u underlined text >
+
+                    Inside of the body text you can use <li > to create a todo list, to create a list item type ** at the end of the previous list item i.e. <li This is one ** Now two ** And three etc. >. One  item list do not need ** <li One item >.
+                    
+                    If you have created an entry containing a todo list, and not a plain list, when you inspect your entry you will have boxes to check indicating you have completed that item. If all items have been checked the item will be moved to the completed section. Should you find you have prematurely completed your list you can find it in the completed section and unclick the appropriate box. It will be added back to your home area. Alternatively you can type the /uncomplete Your Title. This will uncheck the last task you check and return it to the home area.
+
+
+`
+
+
 titleCount = entries.filter(item => item.name === text).length;
 
 // need to made the content escaped
@@ -98,10 +132,11 @@ function submitHandler(){
                     break;
 
                 case '/help':
-                    console.log(`What do you need`)
+                    left.innerText = helpTxt;
                     break;
                 case '/filter':
-                    renderEntries(hashTagFilter(event.target.elements[0].value.slice(8)))
+                    renderEntries(hashTagFilter(inputField.value.slice(8)))
+                    // renderEntries(hashTagFilter(event.target.elements[0].value.slice(8)))
                     break;
                 case '/home':
                     renderEntries(entries)
@@ -242,7 +277,6 @@ function editEntry(identifier){
             console.log(`edit identifier is: ${identifier}`);
             
                 left.innerHTML = `
-                <div class="item" data-key=${entry.id}>
                             
                             <form id="edit-form" data-key=${entry.id}>
                             <input type="text" id="edit-title" value="${entry.title}" autofocus>
@@ -255,7 +289,7 @@ function editEntry(identifier){
                                 <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
                                 </div>
                             </div>
-                        </div>
+                       
                 `;
                 console.log(entry.title)
                 
@@ -263,7 +297,6 @@ function editEntry(identifier){
             console.log(`identifier == entry.title: ${identifier == entry.title}`)
 
                 left.innerHTML = `
-                <div class="item" data-key=${entry.id}>
                             
                             <form id="edit-form" data-key=${entry.id}>
                             <input type="text" id="edit-title" value="${entry.title}" autofocus>
@@ -276,7 +309,6 @@ function editEntry(identifier){
                                 <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
                                 </div>
                             </div>
-                        </div>
                 `;
                 console.log(entry.title)
             
@@ -297,7 +329,7 @@ function editEntry(identifier){
                 editTitleInput.value !== "" ? item.title = editTitleInput.value : item.title = 'Untitled';
                 
                 item.text = editTextInput.value;
-                item.tags = textHandler(editTextInput.value);
+                item.tags = tagHandler(editTextInput.value);
             }
         })
 
@@ -404,9 +436,13 @@ document.addEventListener('click', (event)=>{
         if(curItem.classList[1] !== 'expand-height'){
             curItem.classList.remove('contract-height');
             curItem.classList.add('expand-height');
+            // entryTxt.classList.remove('contract-height');
+            // entryTxt.classList.add('expand-height');
         } else {
             curItem.classList.remove('expand-height');
             curItem.classList.add('contract-height');
+            // entryTxt.classList.remove('contract-height');
+            // entryTxt.classList.add('expand-height');
         }
 
     } 
