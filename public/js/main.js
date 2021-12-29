@@ -190,7 +190,8 @@ function textMarkup(text){
         let listArr = text.match(regExLi)[0].substring(3,text.match(regExLi)[0].length - 1).split("**");
         listArr.forEach(listItem =>{
             console.log('list item ',listItem)
-            theList += `<li>${listItem}</li>`;
+            theList += `<li>${listItem} <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+            <label for="vehicle1"> I have a bike</label><br></li> `;
         });
     
         
