@@ -7,6 +7,8 @@ const userAlert = document.getElementById('user-alert');
 
 let entries = [];
 
+// <li This is one ** This is two <completed item>>
+
 const helpTxt = `
                     Welcome to my note and todo app. Over the years as I have used the terminal more, and hobbied with coding I have grown fond of running commands by text. So I took that approach with this project. I included a few mouse interactions, but everything can be controlled completely by text.
 
@@ -190,8 +192,12 @@ function textMarkup(text){
         let listArr = text.match(regExLi)[0].substring(3,text.match(regExLi)[0].length - 1).split("**");
         listArr.forEach(listItem =>{
             console.log('list item ',listItem)
-            theList += `<li>${listItem} <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-            <label for="vehicle1"> I have a bike</label><br></li> `;
+            theList += `<li>
+            
+            <input type="checkbox" name="${listItem.replace(/\s+/g,'')}" value="Bike">
+            <label for="${listItem.replace(/\s+/g,'')}"> ${listItem}</label><br>
+            
+            </li> `;
         });
     
         
