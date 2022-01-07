@@ -1,5 +1,7 @@
 const btn = document.getElementById('enter'); 
 const left = document.getElementById('left'); 
+const right = document.getElementById('right'); 
+
 const inputForm = document.querySelector('.todo-form');
 const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
@@ -47,8 +49,34 @@ titleCount = entries.filter(item => item.name === text).length;
 // need to made the content escaped
 // when updating add new hash tags when needed
 
+// just tryin to view stuff probably garbage function
+function tagNamez(e){
+    console.log(e)
+}
+
+function renderHashtags (entries) {
+    let tagsArr = [];
+
+    
+
+    entries.forEach(item =>{
+        if(item.tags.length > 0){
+            tagsArr.push(...item.tags)
+        }    
+    })
+
+    // this creates a new array that has no duplicates.
+    let tagsSlim = Array.from(new Set(tagsArr));
+
+    tagsSlim.forEach(tag =>{
+        right.innerHTML += `<a href="#" onclick="tagNamez(this)">${tag}</a><br>`;
+
+        // right.innerHTML += `<a href="#" onclick="renderEntries(hashTagFilter(inputField.value.slice(8)))">${tag}</a><br>`;
+
+    })
 
 
+}
 
 function tagHandler(text){
 
@@ -194,15 +222,16 @@ function textMarkup(text){
             console.log('list item ',listItem)
             theList += `<li>
             
-            <input type="checkbox" name="${listItem.replace(/\s+/g,'')}" value="Bike">
-            <label for="${listItem.replace(/\s+/g,'')}"> ${listItem}</label><br>
-            
+            ${listItem}
             </li> `;
         });
     
         
     
-            text = text.replace(regExLi, `<ul>${theList}</ul>`);
+            text = text.replace(regExLi, `<ul>
+                                            ${theList}
+                                            Add item++ 
+                                         </ul>`);
             return text;
         
     }
@@ -456,3 +485,6 @@ document.addEventListener('click', (event)=>{
     
 })
 
+
+
+renderHashtags(entries)
