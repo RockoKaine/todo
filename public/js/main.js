@@ -179,8 +179,8 @@ function submitHandler(){
 
 function addEntry(item){
 
-    let itemTitle = item.substring(0, item.indexOf('--'));
-    let itemText = item.substring(item.indexOf('--')).replace('--','');
+    let itemTitle = item.substring(0, item.indexOf('--')).trim();
+    let itemText = item.substring(item.indexOf('--')).replace('--','').trim();
     itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("")     
     
     if(item !== ''){
@@ -196,6 +196,8 @@ function addEntry(item){
 
         entries.push(entry);
         addToLocalStorage(entries);
+            right.innerHTML = "";
+        renderHashtags(entries);
         inputField.value = "";
     }
 }
@@ -351,6 +353,7 @@ function editEntry(identifier){
         })
 
         addToLocalStorage(entries);
+        // renderHashtags(entries)
 
     });
 
