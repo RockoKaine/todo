@@ -11,6 +11,11 @@ let entries = [];
 
 // <li This is one ** This is two <completed item>>
 
+// when there is a space in the title "Cat " vs "Cat" those wont count as dups.
+
+// the titles are giving me and error need to look into that
+// and need to redisplay the hashtag on new hashtag update
+
 const helpTxt = `
                     Welcome to my note and todo app. Over the years as I have used the terminal more, and hobbied with coding I have grown fond of running commands by text. So I took that approach with this project. I included a few mouse interactions, but everything can be controlled completely by text.
 
@@ -49,15 +54,9 @@ titleCount = entries.filter(item => item.name === text).length;
 // need to made the content escaped
 // when updating add new hash tags when needed
 
-// just tryin to view stuff probably garbage function
-function tagNamez(e){
-    console.log(e)
-}
 
 function renderHashtags (entries) {
     let tagsArr = [];
-
-    
 
     entries.forEach(item =>{
         if(item.tags.length > 0){
@@ -69,12 +68,8 @@ function renderHashtags (entries) {
     let tagsSlim = Array.from(new Set(tagsArr));
 
     tagsSlim.forEach(tag =>{
-        right.innerHTML += `<a href="#" onclick="tagNamez(this)">${tag}</a><br>`;
-
-        // right.innerHTML += `<a href="#" onclick="renderEntries(hashTagFilter(inputField.value.slice(8)))">${tag}</a><br>`;
-
+        right.innerHTML += `<a href="#" >${tag}</a><br>`;
     })
-
 
 }
 
@@ -243,9 +238,6 @@ function textMarkup(text){
 }
 
 
-
-
-
 function renderEntries(entries){
 
     left.innerHTML = "";
@@ -292,17 +284,6 @@ function getFromLocalStorage(){
     }
 }
 getFromLocalStorage();
-
-
-
-
-
-
-
-
-
-
-
 
 
 function editEntry(identifier){
@@ -375,12 +356,7 @@ function editEntry(identifier){
 
 }
 
-
-
-
-
 function deleteEntry(identifier){
-
 
 entries.forEach((entry=>{
     if(identifier == entry.id){
@@ -403,49 +379,6 @@ entries.forEach((entry=>{
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // add an eventListener on form, and listen for submit event
 inputForm.addEventListener('submit', function(event) {
     // prevent the page from reloading when submitting the form
@@ -453,10 +386,6 @@ inputForm.addEventListener('submit', function(event) {
     submitHandler();
     //addEntry(inputField.value); // call addTodo function with input box current value
   });
-
-
-
-
 
 
 
