@@ -1,20 +1,30 @@
 const btn = document.getElementById('enter'); 
 const left = document.getElementById('left'); 
 const right = document.getElementById('right'); 
+const hashContainer = document.getElementById('hash-container'); 
 
 const inputForm = document.querySelector('.todo-form');
 const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
 const userAlert = document.getElementById('user-alert');
 
+
+let elasticIndex = elasticlunr(function () {
+    this.addField('title');
+    this.addField('text');
+    this.setRef('id');
+});
+
 let entries = [];
+
 
 // <li This is one ** This is two <completed item>>
 
-// when there is a space in the title "Cat " vs "Cat" those wont count as dups.
 
 // the titles are giving me and error need to look into that
 // and need to redisplay the hashtag on new hashtag update
+
+// use elasticlunr
 
 const helpTxt = `
                     Welcome to my note and todo app. Over the years as I have used the terminal more, and hobbied with coding I have grown fond of running commands by text. So I took that approach with this project. I included a few mouse interactions, but everything can be controlled completely by text.
@@ -44,8 +54,6 @@ const helpTxt = `
                     Inside of the body text you can use <li > to create a todo list, to create a list item type ** at the end of the previous list item i.e. <li This is one ** Now two ** And three etc. >. One  item list do not need ** <li One item >.
                     
                     If you have created an entry containing a todo list, and not a plain list, when you inspect your entry you will have boxes to check indicating you have completed that item. If all items have been checked the item will be moved to the completed section. Should you find you have prematurely completed your list you can find it in the completed section and unclick the appropriate box. It will be added back to your home area. Alternatively you can type the /uncomplete Your Title. This will uncheck the last task you check and return it to the home area.
-
-
 `
 
 
@@ -68,7 +76,7 @@ function renderHashtags (entries) {
     let tagsSlim = Array.from(new Set(tagsArr));
 
     tagsSlim.forEach(tag =>{
-        right.innerHTML += `<a href="#" >${tag}</a><br>`;
+        hashContainer.innerHTML += `<a href="#" onclick="renderEntries(hashTagFilter('${tag}'))">${tag}</a><br>`;
     })
 
 }
@@ -196,10 +204,11 @@ function addEntry(item){
 
         entries.push(entry);
         addToLocalStorage(entries);
-            right.innerHTML = "";
+            hashContainer.innerHTML = "";
         renderHashtags(entries);
         inputField.value = "";
     }
+
 }
 
 
@@ -241,7 +250,7 @@ function textMarkup(text){
 
 
 function renderEntries(entries){
-
+    
     left.innerHTML = "";
     for(let i = entries.length - 1; i >= 0; i--){
         //seeing if entry is completed
@@ -418,5 +427,7 @@ document.addEventListener('click', (event)=>{
 })
 
 
-
+entries.forEach(entry =>{
+    elasticIndex.addDoc(entry);
+})
 renderHashtags(entries)
