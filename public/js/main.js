@@ -28,6 +28,7 @@ let entries = [];
 
 
 // maybe add a deleted history and auto clear item after 7 days
+// open command since i wanna go more terminal
 
 const helpTxt = `
                     Welcome to my note and todo app. Over the years as I have used the terminal more, and hobbied with coding I have grown fond of running commands by text. So I took that approach with this project. I included a few mouse interactions, but everything can be controlled completely by text.
