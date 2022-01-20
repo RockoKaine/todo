@@ -63,6 +63,27 @@ titleCount = entries.filter(item => item.name === text).length;
 // when updating add new hash tags when needed
 
 
+function searchRender(query){
+
+    let queryResults = elasticIndex.search(query);
+    // let pushme = entries.find(item => item.id == queryResults[0].doc.id)
+
+    if(queryResults.length > 0){
+        let ogEntries = entries;
+        entries = [];
+
+        queryResults.forEach(res =>{
+            console.log(res.doc.id)
+            let resToPush = ogEntries.find(item => item.id == res.doc.id)
+            entries.push(resToPush)
+        });
+        console.log(entries)
+    }
+
+
+    renderEntries(entries);
+}
+
 function renderHashtags (entries) {
     let tagsArr = [];
 
@@ -430,4 +451,4 @@ document.addEventListener('click', (event)=>{
 entries.forEach(entry =>{
     elasticIndex.addDoc(entry);
 })
-renderHashtags(entries)
+renderHashtags(entries);
