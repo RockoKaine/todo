@@ -9,6 +9,15 @@ const inputField = document.getElementById('control-input');
 const userAlert = document.getElementById('user-alert');
 
 
+// This event listener keeps the input focus, unless text is selected.
+
+window.addEventListener('mouseup', ()=>{
+    let needFocus = false;
+    if(window.getSelection().toString().length == 0){
+        inputField.focus()
+    } 
+})
+
 let elasticIndex = elasticlunr(function () {
     this.addField('title');
     this.addField('text');
@@ -18,13 +27,7 @@ let elasticIndex = elasticlunr(function () {
 let entries = [];
 
 
-// <li This is one ** This is two <completed item>>
-
-
-// the titles are giving me and error need to look into that
-// and need to redisplay the hashtag on new hashtag update
-
-// use elasticlunr
+// maybe add a deleted history and auto clear item after 7 days
 
 const helpTxt = `
                     Welcome to my note and todo app. Over the years as I have used the terminal more, and hobbied with coding I have grown fond of running commands by text. So I took that approach with this project. I included a few mouse interactions, but everything can be controlled completely by text.
@@ -66,18 +69,15 @@ titleCount = entries.filter(item => item.name === text).length;
 function searchRender(query){
 
     let queryResults = elasticIndex.search(query);
-    // let pushme = entries.find(item => item.id == queryResults[0].doc.id)
 
     if(queryResults.length > 0){
         let ogEntries = entries;
         entries = [];
 
         queryResults.forEach(res =>{
-            console.log(res.doc.id)
             let resToPush = ogEntries.find(item => item.id == res.doc.id)
             entries.push(resToPush)
         });
-        console.log(entries)
     }
 
 
@@ -190,7 +190,9 @@ function submitHandler(){
                     break;
                 case '/filter':
                     renderEntries(hashTagFilter(inputField.value.slice(8)))
-                    // renderEntries(hashTagFilter(event.target.elements[0].value.slice(8)))
+                    break;
+                case '/search':
+                    searchRender(inputField.value.slice(8))
                     break;
                 case '/home':
                     renderEntries(entries)
@@ -428,7 +430,7 @@ document.addEventListener('click', (event)=>{
 
         // targeting the entry text need to size it on click to hide and unhide text.
         let entryTxt = document.getElementById('txt');
-        console.log(curItem)
+        // console.log(curItem)
 
     // if(event.target !== this || event.target === this){
         if(curItem.classList[1] !== 'expand-height'){
