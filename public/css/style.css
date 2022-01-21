@@ -43,7 +43,7 @@ html, body {
     color: white;
 }
 
-h2{
+h1, h2{
     color: #00ff0d;
 }
 
@@ -90,14 +90,43 @@ body{
     display: none; /* for Chrome, Safari, and Opera */
 }
 
+.note-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    /* justify-content: space-evenly; */
+}
+
+.note-container .edit-delete {
+    margin: 16px;
+}
+
+.note-container p{
+    padding: 0 25px;
+    font-size: 1.26rem;
+}
+
+.note-footer{
+/* margin-top auto sets the footer to bottom */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top:auto;
+    height: 10%;
+}
+
+
 #user-alert{
-    background: #008607;
+    /* background: #008607; */
     margin: 30px 0;
     height: 50px;
     width: 100%;
     text-align: center;
     font-size: 1.75rem;
 }
+
+
 
 .item {
     color: rgb(169,169,169);
@@ -195,9 +224,9 @@ footer {
 }
 
 button{
-    background: #353535;
-    border: solid 2px whitesmoke;
-    border-radius: 26px;
+    background: none;
+    border: none;
+    /* border-radius: 26px; */
     height: 45px;
     width: 120px;
     font-size: 1.75rem;
@@ -207,7 +236,7 @@ button{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75)
+    /* box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75) */
 }
 
 button:hover {

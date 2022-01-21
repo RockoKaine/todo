@@ -6,6 +6,10 @@ Also need it so that when you click the title that we render the single entry, n
 
 Feeling the need to make a history section for all old deleted items. Will keep them for a week or so. Need a new function to handle that.
 
+Need to make sure the error messages get set up
+
+
+Need a way to "format" the text, <l> will make a line break <b bold text> <! important text(diff color)>
 
 
 */
@@ -21,6 +25,8 @@ const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
 const userAlert = document.getElementById('user-alert');
 
+let entries = [];
+let deletedEntries = [];
 
 // This event listener keeps the input focus, unless text is selected.
 
@@ -37,7 +43,6 @@ let elasticIndex = elasticlunr(function () {
     this.setRef('id');
 });
 
-let entries = [];
 
 
 
@@ -74,8 +79,6 @@ const helpTxt = `
 
 titleCount = entries.filter(item => item.name === text).length;
 
-// need to made the content escaped
-// when updating add new hash tags when needed
 
 
 function searchRender(query){
@@ -294,8 +297,8 @@ function renderEntries(entries){
         // const checked = entries[i].completed ? 'checked' : null;
 
         left.innerHTML += `
-    <div class="item" data-key=${entries[i].id}">
-                <div class="title">
+    <div class="item" data-key="${entries[i].id}">
+                <div class="title" data-key="${entries[i].id}" onclick="renderItem(this.dataset.key)">
                     <h2>${entries[i].title}</h2>
                 </div>
                 
@@ -309,6 +312,35 @@ function renderEntries(entries){
     `
 
     }
+}
+
+function renderItem(identifier){
+
+    entries.forEach((entry=>{
+        
+        if(identifier == entry.id){
+            console.log(`identifier == entry.id: ${identifier == entry.id}`)
+            console.log(`edit identifier is: ${identifier}`);
+            
+                left.innerHTML = `
+
+                            <div class="note-container">
+                            <h1>${entry.title}</h1>
+                            <p>${entry.text}</p>
+                            <div class="note-footer">
+                                <h5>${entry.dateAdd} : ${entry.tags}</h5>
+                                <div class="edit-delete">
+                                <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                                </div>
+                            </div>
+                       
+                `;
+                console.log(entry.title)
+                
+        }
+        
+    }))
+    
 }
 
 
