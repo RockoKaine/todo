@@ -1,3 +1,16 @@
+/*
+
+I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
+
+Also need it so that when you click the title that we render the single entry, need an open command. /open || /rocko since terminal will open things with like nano vim code etc. so why not /rocko since we are openning with my app?
+
+Feeling the need to make a history section for all old deleted items. Will keep them for a week or so. Need a new function to handle that.
+
+
+
+*/
+
+
 const btn = document.getElementById('enter'); 
 const left = document.getElementById('left'); 
 const right = document.getElementById('right'); 
@@ -27,8 +40,6 @@ let elasticIndex = elasticlunr(function () {
 let entries = [];
 
 
-// maybe add a deleted history and auto clear item after 7 days
-// open command since i wanna go more terminal
 
 const helpTxt = `
                     Welcome to my note and todo app. Over the years as I have used the terminal more, and hobbied with coding I have grown fond of running commands by text. So I took that approach with this project. I included a few mouse interactions, but everything can be controlled completely by text.
@@ -108,6 +119,7 @@ function tagHandler(text){
 
     let regExpr = /\B(\#[a-zA-Z]+\b)(?!;)/g
     text = text.match(regExpr);
+
     return text;
 
 }
@@ -288,7 +300,7 @@ function renderEntries(entries){
                 </div>
                 
                 <div class="item-footer">
-                    <h5>${entries[i].dateAdd} : ${entries[i].tags}</h5>
+                    <h5>${entries[i].dateAdd} : ${entries[i].tags.join(' ')}</h5>
                     <div class="edit-delete">
                     <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entries[i].id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entries[i].id}>Delete</span>
                     </div>

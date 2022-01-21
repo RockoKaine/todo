@@ -68,8 +68,8 @@ body{
 }
 
 .container {
-    height: 75%;
-    width: 95%;
+    height: 95%;
+    width: 100%;
     margin: auto;
     display: flex;
     justify-content: center;
@@ -79,8 +79,8 @@ body{
 
 #left{
     height: 95%;
-    width: 90%;
-    padding: 20px;
+    width: 87%;
+    /* padding: 20px; */
     overflow: scroll;
     -ms-overflow-style: none; /* for Internet Explorer, Edge */
     scrollbar-width: none; /* for Firefox */
@@ -101,14 +101,19 @@ body{
 
 .item {
     color: rgb(169,169,169);
+    width: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    border-bottom: dashed 1px rgb(126, 126, 126);
-    margin-bottom: 50px;
-    height: 35%;
+    border-bottom: dashed 1px rgba(126, 126, 126, 0.25);
     overflow: hidden;
     z-index: 5;
+}
+.item * {
+    margin: 2px 10px;
+}
+
+.item:hover{
+    background: rgba(69, 69, 69, 0.25);
 }
 
 .expand-height {
@@ -136,9 +141,7 @@ body{
     }
 }
 
-.item * {
-    margin: 15px;
-}
+
 
 #edit-form *{
     margin: 15px;
@@ -147,20 +150,20 @@ body{
 .item-footer {
     display: flex;
     justify-content: space-between;
-    /* align-items: end; */
+    align-items: center;
     padding: 10px;
     height: 50px;
 }
 
 #txt {
-    /* height: 26%; */
+    height: 26%;
     height: 100%;
     overflow: hidden;
 }
 
 #right{
     height: 95%;
-    width: 10%;
+    width: 13%;
     border-left: solid 3px #00ff0d;
     padding: 10px 20px;
     text-align: center;
