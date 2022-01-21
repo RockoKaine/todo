@@ -89,9 +89,10 @@ function renderHashtags (entries) {
     let tagsArr = [];
 
     entries.forEach(item =>{
-        if(item.tags.length > 0){
+        if(item.tags != null){
             tagsArr.push(...item.tags)
-        }    
+        } 
+            
     })
 
     // this creates a new array that has no duplicates.
@@ -285,9 +286,7 @@ function renderEntries(entries){
                 <div class="title">
                     <h2>${entries[i].title}</h2>
                 </div>
-                <div class="txt" id="txt">
-                    ${textMarkup(entries[i].text)}
-                </div>
+                
                 <div class="item-footer">
                     <h5>${entries[i].dateAdd} : ${entries[i].tags}</h5>
                     <div class="edit-delete">
@@ -425,30 +424,30 @@ inputForm.addEventListener('submit', function(event) {
 
 
 
-document.addEventListener('click', (event)=>{
-    if(event.target.closest('.item')){
-        let curItem = document.querySelector(`[data-key='${event.target.closest('.item').dataset.key}']`);
+// document.addEventListener('click', (event)=>{
+//     if(event.target.closest('.item')){
+//         let curItem = document.querySelector(`[data-key='${event.target.closest('.item').dataset.key}']`);
 
-        // targeting the entry text need to size it on click to hide and unhide text.
-        let entryTxt = document.getElementById('txt');
-        // console.log(curItem)
+//         // targeting the entry text need to size it on click to hide and unhide text.
+//         let entryTxt = document.getElementById('txt');
+//         // console.log(curItem)
 
-    // if(event.target !== this || event.target === this){
-        if(curItem.classList[1] !== 'expand-height'){
-            curItem.classList.remove('contract-height');
-            curItem.classList.add('expand-height');
-            // entryTxt.classList.remove('contract-height');
-            // entryTxt.classList.add('expand-height');
-        } else {
-            curItem.classList.remove('expand-height');
-            curItem.classList.add('contract-height');
-            // entryTxt.classList.remove('contract-height');
-            // entryTxt.classList.add('expand-height');
-        }
+//     // if(event.target !== this || event.target === this){
+//         if(curItem.classList[1] !== 'expand-height'){
+//             curItem.classList.remove('contract-height');
+//             curItem.classList.add('expand-height');
+//             // entryTxt.classList.remove('contract-height');
+//             // entryTxt.classList.add('expand-height');
+//         } else {
+//             curItem.classList.remove('expand-height');
+//             curItem.classList.add('contract-height');
+//             // entryTxt.classList.remove('contract-height');
+//             // entryTxt.classList.add('expand-height');
+//         }
 
-    } 
+//     } 
     
-})
+// })
 
 
 entries.forEach(entry =>{
