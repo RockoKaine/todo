@@ -211,7 +211,7 @@ footer {
 }
 #control-input {
     width: 85%;
-    background: none;
+    background-color: rgba(11, 135, 147, .3);
     font-size: 2rem;
     padding: 10px;
     border: none;

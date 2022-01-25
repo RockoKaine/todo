@@ -12,18 +12,29 @@ Need to make sure the error messages get set up
 Need a way to "format" the text, <l> will make a line break <b bold text> <! important text(diff color)>
 
 
+for the edit function the focus needs to allow you to focus on the edirt form
+
+so for the edit view, get rid of the main input, make it line nano command, 
+
+
 */
+
+
+
+
 
 
 const btn = document.getElementById('enter'); 
 const left = document.getElementById('left'); 
 const right = document.getElementById('right'); 
 const hashContainer = document.getElementById('hash-container'); 
+const editTextField =  document.getElementById('edit-text');
+const editTitleField =  document.getElementById('edit-title');
 
 const inputForm = document.querySelector('.todo-form');
 const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
-const userAlert = document.getElementById('user-alert');
+// const userAlert = document.getElementById('user-alert');
 
 let entries = [];
 let deletedEntries = [];
@@ -32,9 +43,19 @@ let deletedEntries = [];
 
 window.addEventListener('mouseup', ()=>{
     let needFocus = false;
-    if(window.getSelection().toString().length == 0){
-        inputField.focus()
-    } 
+    // if(window.getSelection().toString().length == 0 ){
+    //     inputField.focus()
+    // }
+    console.log(document.activeElement === document.getElementById('edit-text'))
+
+    if(document.activeElement === editTextField){
+        document.activeElement === editTextField.focus();
+    } else if(document.activeElement === editTitleField) {
+        document.activeElement === editTitleField.focus();
+        
+    } else if(window.getSelection().toString().length == 0 && document.activeElement !== editTextField){
+            inputField.focus()
+        }
 })
 
 let elasticIndex = elasticlunr(function () {
@@ -201,6 +222,10 @@ function submitHandler(){
                     console.log('edit typed')
                     editEntry(event.target.elements[0].value.slice(6))
                     break;
+                case '/open':
+                    console.log('edit typed')
+                    renderItem(event.target.elements[0].value.slice(6))
+                    break;
 
                 case '/help':
                     left.innerText = helpTxt;
@@ -247,6 +272,10 @@ function addEntry(item){
             hashContainer.innerHTML = "";
         renderHashtags(entries);
         inputField.value = "";
+        left.innerHTML += `${itemTitle}, has been successfully created!`
+    } else if (item === ''){
+        left.innerHTML += `<p>Could not do that try again.</p>`
+
     }
 
 }
@@ -335,8 +364,23 @@ function renderItem(identifier){
                             </div>
                        
                 `;
-                console.log(entry.title)
+                console.log(entry.title);
                 
+        } else if(identifier === entry.title){
+            left.innerHTML = `
+
+                            <div class="note-container">
+                            <h1>${entry.title}</h1>
+                            <p>${entry.text}</p>
+                            <div class="note-footer">
+                                <h5>${entry.dateAdd} : ${entry.tags}</h5>
+                                <div class="edit-delete">
+                                <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                                </div>
+                            </div>
+                       
+                `;
+
         }
         
     }))
@@ -441,17 +485,17 @@ entries.forEach((entry=>{
     if(identifier == entry.id){
         console.log(`delete identifier is: ${identifier}`);
         entries = entries.filter((item)=>{
-            userAlert.innerText = `Deleted ${item.title}`
+            // userAlert.innerText = `Deleted ${item.title}`
                     // types are dif, so not using !==
                     return item.id != identifier;
                 });
     } else if(identifier == entry.title){
         entries = entries.filter((item)=>{
-            userAlert.innerText = `Deleted ${item.title}`
+            // userAlert.innerText = `Deleted ${item.title}`
                     return item.title != identifier;
                 });
     } else {
-        userAlert.innerText = 'Could not delete that!'
+        // userAlert.innerText = 'Could not delete that!'
     }
 }))
     addToLocalStorage(entries);
