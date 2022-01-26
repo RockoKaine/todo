@@ -20,14 +20,21 @@
            <div id="hash-container">
 
            </div>
+
+           <h3>Trash</h3>
+           <div id="trash">
+           </div>
         </div>
         </div>
     </div>
     <footer>
 
-        <form class="todo-form"> 
+        <form class="todo-form" action="#0"> 
             <!-- <input type="text" id="control-input" autofocus> -->
-            <textarea name="control-input" id="control-input" cols="30" rows="10"></textarea>
+            <div class="grow-wrap">
+                <textarea name="control-input" rows="1" id="control-input" onInput="this.parentNode.dataset.replicatedValue = this.value"></textarea>
+            </div>
+
             <button type="submit" id="enter">Enter</button>
           </form>
 

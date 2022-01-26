@@ -17,6 +17,7 @@ for the edit function the focus needs to allow you to focus on the edirt form
 so for the edit view, get rid of the main input, make it line nano command, 
 
 
+
 */
 
 
@@ -30,7 +31,7 @@ const right = document.getElementById('right');
 const hashContainer = document.getElementById('hash-container'); 
 const editTextField =  document.getElementById('edit-text');
 const editTitleField =  document.getElementById('edit-title');
-
+const trash = document.getElementById('trash');
 const inputForm = document.querySelector('.todo-form');
 const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
@@ -41,12 +42,17 @@ let deletedEntries = [];
 
 // This event listener keeps the input focus, unless text is selected.
 
+document.addEventListener('keypress', e => {
+    if (e.code === 'Enter' && !e.shiftKey){
+        e.preventDefault();
+        btn.click();
+        submitHandler();
+    }
+})
+
 window.addEventListener('mouseup', ()=>{
     let needFocus = false;
-    // if(window.getSelection().toString().length == 0 ){
-    //     inputField.focus()
-    // }
-    console.log(document.activeElement === document.getElementById('edit-text'))
+  
 
     if(document.activeElement === editTextField){
         document.activeElement === editTextField.focus();
@@ -141,7 +147,7 @@ function renderHashtags (entries) {
 
 function tagHandler(text){
 
-    let regExpr = /\B(\#[a-zA-Z]+\b)(?!;)/g
+    let regExpr = /\B(\#[a-zA-Z0-9]+\b)(?!;)/g
     text = text.match(regExpr);
 
     return text;
@@ -268,7 +274,7 @@ function addEntry(item){
         };
 
         entries.push(entry);
-        addToLocalStorage(entries);
+        addToLocalStorage("entries",entries);
             hashContainer.innerHTML = "";
         renderHashtags(entries);
         inputField.value = "";
@@ -320,28 +326,48 @@ function textMarkup(text){
 
 function renderEntries(entries){
     
+    trash.innerHTML = "";
     left.innerHTML = "";
     for(let i = entries.length - 1; i >= 0; i--){
         //seeing if entry is completed
         // const checked = entries[i].completed ? 'checked' : null;
+        if(entries[i].completed === false){
 
-        left.innerHTML += `
-    <div class="item" data-key="${entries[i].id}">
-                <div class="title" data-key="${entries[i].id}" onclick="renderItem(this.dataset.key)">
-                    <h2>${entries[i].title}</h2>
-                </div>
-                
-                <div class="item-footer">
-                    <h5>${entries[i].dateAdd} : ${entries[i].tags.join(' ')}</h5>
-                    <div class="edit-delete">
-                    <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entries[i].id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entries[i].id}>Delete</span>
+            left.innerHTML += `
+        <div class="item" data-key="${entries[i].id}">
+                    <div class="title" data-key="${entries[i].id}" onclick="renderItem(this.dataset.key)">
+                        <h2>${entries[i].title}</h2>
+                    </div>
+                    
+                    <div class="item-footer">
+                        <h5>${entries[i].dateAdd} : ${entries[i].tags ? entries[i].tags.join(' ') : "No Tags"}</h5>
+                        <div class="edit-delete">
+                        <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entries[i].id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entries[i].id}>Delete</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-    `
+        `
+        }
 
     }
+
+  
 }
+
+function renderTrash(){
+    // deletedEntries.forEach(trashItem =>{
+    //     trash.innerHTML += `${trashItem.title}<br>`;
+    // })
+    
+    entries.forEach(entry =>{
+        if(entry.completed === true){
+                trash.innerHTML += `${entry.title}<br>`;
+            
+        }
+    })
+}
+
+
 
 function renderItem(identifier){
 
@@ -388,21 +414,42 @@ function renderItem(identifier){
 }
 
 
-function addToLocalStorage(entries){
-    //convert the array to a string                     
-    localStorage.setItem('entries', JSON.stringify(entries));
+function addToLocalStorage(storageName, theEntries){
+    //convert the array to a string
+    
+    // storageName === "entries" ? localStorage.setItem('entries', JSON.stringify(entries)) : localStorage.setItem('deletedEntries', JSON.stringify(entries));
+
+    if(storageName === 'entries'){
+        localStorage.setItem('entries', JSON.stringify(theEntries)) 
+    } else if(storageName === 'deletedEntries'){
+        localStorage.setItem('deletedEntries', JSON.stringify(theEntries))
+    }
+    
+    // localStorage.setItem(storageName, JSON.stringify(entries));
 
     // render to screen
     renderEntries(entries)
+    renderTrash()
 }
 
 function getFromLocalStorage(){
     const reference = localStorage.getItem('entries');
+    const delReference = localStorage.getItem('deletedEntries');
     // if reference exist 
     if(reference){
         // converts back to array
         entries = JSON.parse(reference);
+        
         renderEntries(entries)
+        renderTrash();
+        
+    }
+
+    if(delReference){
+        deletedEntries = JSON.parse(delReference);
+        renderTrash(deletedEntries);
+        
+
     }
 }
 getFromLocalStorage();
@@ -472,7 +519,7 @@ function editEntry(identifier){
             }
         })
 
-        addToLocalStorage(entries);
+        addToLocalStorage("entries",entries);
         // renderHashtags(entries)
 
     });
@@ -480,25 +527,51 @@ function editEntry(identifier){
 }
 
 function deleteEntry(identifier){
+console.log(identifier)
 
-entries.forEach((entry=>{
-    if(identifier == entry.id){
-        console.log(`delete identifier is: ${identifier}`);
-        entries = entries.filter((item)=>{
-            // userAlert.innerText = `Deleted ${item.title}`
-                    // types are dif, so not using !==
-                    return item.id != identifier;
-                });
-    } else if(identifier == entry.title){
-        entries = entries.filter((item)=>{
-            // userAlert.innerText = `Deleted ${item.title}`
-                    return item.title != identifier;
-                });
-    } else {
-        // userAlert.innerText = 'Could not delete that!'
+entries.forEach(entry =>{
+    if(entry.id == identifier){
+        entry.completed = true
     }
-}))
-    addToLocalStorage(entries);
+})
+addToLocalStorage("entries", entries);
+
+// console.log(res)
+    // entries.forEach(entry =>{
+    //     if(identifier == entry.id){
+    //         entry.completed = true;
+    //     }
+    // });
+
+// entries.forEach((entry=>{
+//     if(identifier == entry.id){
+
+        
+//         entries = entries.filter((item)=>{
+//             // userAlert.innerText = `Deleted ${item.title}`
+//                     // types are dif, so not using !==
+//                     return item.id != identifier;
+//                 });
+        
+//     } else if(identifier == entry.title){
+
+//         deletedEntries = entries.filter(item =>{
+//             return item.id == identifier;
+//         });
+
+
+//         entries = entries.filter((item)=>{
+//             // userAlert.innerText = `Deleted ${item.title}`
+//                     return item.title != identifier;
+//                 });
+//     } else {
+//         // userAlert.innerText = 'Could not delete that!'
+//     }
+// }))
+
+
+//     // addToLocalStorage("deletedEntries", deletedEntries);
+    
 }
 
 

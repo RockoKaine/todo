@@ -206,13 +206,16 @@ footer {
 
 .todo-form {
     display: flex;
+    /* background-color: rgba(11, 135, 147, .3); */
     justify-content: space-between;
     align-items: flex-end;
+    width: 100%;
 }
 #control-input {
-    width: 85%;
-    background-color: rgba(11, 135, 147, .3);
-    font-size: 2rem;
+    width: 96%;
+    background: none;
+    color: #f5f5f5;
+    font-size: 1rem;
     padding: 10px;
     border: none;
     border-bottom: solid 3px #f5f5f5;
@@ -293,3 +296,45 @@ button:active{
 #edit-btn:hover{
     filter: brightness(.85);
 }
+
+
+
+
+
+
+/* growing box  */
+
+
+.grow-wrap {
+    /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
+    width: 100%;
+    display: grid;
+  }
+  .grow-wrap::after {
+    /* Note the weird space! Needed to preventy jumpy behavior */
+    content: attr(data-replicated-value) " ";
+  
+    /* This is how textarea text behaves */
+    white-space: pre-wrap;
+  
+    /* Hidden from view, clicks, and screen readers */
+    visibility: hidden;
+  }
+  .grow-wrap > textarea {
+    /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+    resize: none;
+    /* max-height: 10px; */
+  
+    /* Firefox shows scrollbar on growth, you can hide like this. */
+    overflow: hidden;
+  }
+  .grow-wrap > textarea,
+  .grow-wrap::after {
+    /* Identical styling required!! */
+    border: 1px solid black;
+    padding: 0.5rem;
+    font: inherit;
+  
+    /* Place on top of each other */
+    grid-area: 1 / 1 / 2 / 2;
+  }
