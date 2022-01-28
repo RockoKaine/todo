@@ -24,9 +24,9 @@ so for the edit view, get rid of the main input, make it line nano command,
 
 
 
-
 const btn = document.getElementById('enter'); 
 const left = document.getElementById('left'); 
+const itemBox = document.getElementById('item-box');
 const right = document.getElementById('right'); 
 const hashContainer = document.getElementById('hash-container'); 
 const editTextField =  document.getElementById('edit-text');
@@ -40,6 +40,8 @@ const inputField = document.getElementById('control-input');
 let entries = [];
 let deletedEntries = [];
 
+
+
 // This event listener keeps the input focus, unless text is selected.
 
 document.addEventListener('keypress', e => {
@@ -50,9 +52,10 @@ document.addEventListener('keypress', e => {
     }
 })
 
+
 window.addEventListener('mouseup', ()=>{
     let needFocus = false;
-  
+    
 
     if(document.activeElement === editTextField){
         document.activeElement === editTextField.focus();
@@ -215,7 +218,9 @@ function submitHandler(){
     let regExpr = /\B(\/[a-zA-Z]+\b)(?!;)/g
 
     inputForm.addEventListener('submit', ()=>{
-        event.preventDefault();
+        // event.preventDefault();
+// btn.preventDefault();
+
 
         if(inputField.value[0] == '/'){
             switch(inputField.value.match(regExpr)[0]){
@@ -269,7 +274,6 @@ function addEntry(item){
             title: itemTitle,
             text: itemText,
             tags: tagHandler(item),
-            todoItem: false,
             completed: false
         };
 
@@ -278,9 +282,9 @@ function addEntry(item){
             hashContainer.innerHTML = "";
         renderHashtags(entries);
         inputField.value = "";
-        left.innerHTML += `${itemTitle}, has been successfully created!`
+        itemBox.innerHTML += `${itemTitle}, has been successfully created!`
     } else if (item === ''){
-        left.innerHTML += `<p>Could not do that try again.</p>`
+        itemBox.innerHTML += `<p>Could not do that try again.</p>`
 
     }
 
@@ -327,13 +331,13 @@ function textMarkup(text){
 function renderEntries(entries){
     
     trash.innerHTML = "";
-    left.innerHTML = "";
+    itemBox.innerHTML = "";
     for(let i = entries.length - 1; i >= 0; i--){
         //seeing if entry is completed
         // const checked = entries[i].completed ? 'checked' : null;
         if(entries[i].completed === false){
 
-            left.innerHTML += `
+            itemBox.innerHTML += `
         <div class="item" data-key="${entries[i].id}">
                     <div class="title" data-key="${entries[i].id}" onclick="renderItem(this.dataset.key)">
                         <h2>${entries[i].title}</h2>

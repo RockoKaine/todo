@@ -12,7 +12,21 @@
     <span id="user-alert"></span>
     <div class="container">
         <div id="left">
-            
+            <div id="item-box">
+
+            </div>
+            <footer>
+        
+                <form class="todo-form" id="todo-form" action="#0"> 
+                    <!-- <input type="text" id="control-input" autofocus> -->
+                    <div class="grow-wrap">
+                        <textarea name="control-input" rows="1" id="control-input" onInput="this.parentNode.dataset.replicatedValue = this.value"></textarea>
+                    </div>
+        
+                  </form>
+        
+                
+            </footer>
         </div>
         <div id="right">
             <a href="#" onclick="renderEntries(entries)">← Home →</a>
@@ -24,22 +38,11 @@
            <h3>Trash</h3>
            <div id="trash">
            </div>
+           <button type="submit" id="enter" form="todo-form">Enter</button>
+
         </div>
         </div>
     </div>
-    <footer>
-
-        <form class="todo-form" action="#0"> 
-            <!-- <input type="text" id="control-input" autofocus> -->
-            <div class="grow-wrap">
-                <textarea name="control-input" rows="1" id="control-input" onInput="this.parentNode.dataset.replicatedValue = this.value"></textarea>
-            </div>
-
-            <button type="submit" id="enter">Enter</button>
-          </form>
-
-        
-    </footer>
     <script src="public/js/elasticlunr.js"></script>
     <script src="public/js/main.js"></script>
 </body>
