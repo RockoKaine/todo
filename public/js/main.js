@@ -1,10 +1,18 @@
 /*
 
+
+note/todo app
+
+items should have:
+-title
+-content
+-date created
+-date completed
+-edit
+-delete
+
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
-Also need it so that when you click the title that we render the single entry, need an open command. /open || /rocko since terminal will open things with like nano vim code etc. so why not /rocko since we are openning with my app?
-
-Feeling the need to make a history section for all old deleted items. Will keep them for a week or so. Need a new function to handle that.
 
 Need to make sure the error messages get set up
 
@@ -12,16 +20,26 @@ Need to make sure the error messages get set up
 Need a way to "format" the text, <l> will make a line break <b bold text> <! important text(diff color)>
 
 
-for the edit function the focus needs to allow you to focus on the edirt form
-
-so for the edit view, get rid of the main input, make it line nano command
-
-in edit mode neeed to fix it so text has title too
-
-
-gotta fix edit from open item, it doesnt change to edit
-
 hashtag sorting stopped working
+i think the hashtags are not working because they didnt exist, i removed the entry and tags still there
+i think i sould render hashtags without the trash one, or maybe with 
+
+
+for trash/tags if names are too long add ...
+
+
+need to be able to delete trash and set trash to delete item after 7 days. also need to restore trash item.
+
+
+wanted to keep text area formatting but need a rich text editor look into it maybe liked quill but feels like a lot... idk though
+
+
+
+
+in note commands:
+    <li First thing-- Second -- Third> ** this is a list 
+    <b Bold me!> ** this will bee bold
+    <e this will be italics>
 
 */
 
@@ -52,7 +70,7 @@ window.onload=function () {
 }
 
 
-// This event listener keeps the input focus, unless text is selected.
+// making the enter key submit the form and shift+enter adding new line
 
 document.addEventListener('keypress', e => {
     if (e.code === 'Enter' && !e.shiftKey){
@@ -62,6 +80,9 @@ document.addEventListener('keypress', e => {
     }
 })
 
+
+
+// This event listener keeps the input focus, unless text is selected.
 
 window.addEventListener('mouseup', ()=>{
     let needFocus = false;
@@ -249,7 +270,7 @@ function submitHandler(){
                     console.log('edit typed')
                     editEntry(event.target.elements[0].value.slice(6))
                     break;
-                case '/open':
+                case '/rkaine':
                     console.log('edit typed')
                     renderItem(event.target.elements[0].value.slice(6))
                     break;
@@ -391,7 +412,7 @@ function renderItem(identifier){
             console.log(`identifier == entry.id: ${identifier == entry.id}`)
             console.log(`edit identifier is: ${identifier}`);
             
-                left.innerHTML = `
+                itemBox.innerHTML = `
 
                             <div class="note-container">
                             <h1>${entry.title}</h1>
@@ -407,7 +428,7 @@ function renderItem(identifier){
                 console.log(entry.title);
                 
         } else if(identifier === entry.title){
-            left.innerHTML = `
+            itemBox.innerHTML = `
 
                             <div class="note-container">
                             <h1>${entry.title}</h1>
@@ -481,30 +502,6 @@ function editEntry(identifier){
             //setting the cursor to star at end of text area
             inputField.setSelectionRange(inputField.value.length, inputField.value.length);
 
-        //     left.innerHTML = `
-        //     <form class="todo-form" id="todo-form" action="#0"> 
-        //     <!-- <input type="text" id="control-input" autofocus> -->
-        //     <div class="grow-wrap">
-        //         <textarea name="control-input" rows="1" id="control-input" onInput="this.parentNode.dataset.replicatedValue = this.value"></textarea>
-        //     </div>
-        //   </form>
-            
-        //     `
-                // left.innerHTML = `
-                            
-                //             <form id="edit-form" data-key=${entry.id}>
-                //             <input type="text" id="edit-title" value="${entry.title}" autofocus>
-                //             <textarea style="resize:none;" name="" id="edit-text" cols="30" rows="10">${entry.text}</textarea>
-                //         <button type="submit" id="enter">Enter</button>
-                //       </form>
-                //             <div class="item-footer">
-                //                 <h5>${entry.dateAdd} : ${entry.tags}</h5>
-                //                 <div class="edit-delete">
-                //                 <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
-                //                 </div>
-                //             </div>
-                       
-                // `;
                 console.log(entry.title)
                 
         } else if(identifier == entry.title){
