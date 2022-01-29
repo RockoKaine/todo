@@ -48,7 +48,7 @@ document.addEventListener('keypress', e => {
     if (e.code === 'Enter' && !e.shiftKey){
         e.preventDefault();
         btn.click();
-        submitHandler();
+        // submitHandler();
     }
 })
 
@@ -66,6 +66,18 @@ window.addEventListener('mouseup', ()=>{
             inputField.focus()
         }
 })
+
+
+// add an eventListener on form, and listen for submit event
+inputForm.addEventListener('submit', function(event) {
+    // prevent the page from reloading when submitting the form
+    event.preventDefault();
+    submitHandler();
+    //addEntry(inputField.value); // call addTodo function with input box current value
+  });
+
+
+
 
 let elasticIndex = elasticlunr(function () {
     this.addField('title');
@@ -212,15 +224,9 @@ function titleCounter(text){
 }
 
 
-
 function submitHandler(){
     // searching for /commands
     let regExpr = /\B(\/[a-zA-Z]+\b)(?!;)/g
-
-    inputForm.addEventListener('submit', ()=>{
-        // event.preventDefault();
-// btn.preventDefault();
-
 
         if(inputField.value[0] == '/'){
             switch(inputField.value.match(regExpr)[0]){
@@ -258,7 +264,6 @@ function submitHandler(){
             addEntry(inputField.value);
         }
         inputField.value = "";
-    })
 }
 
 function addEntry(item){
@@ -579,13 +584,7 @@ addToLocalStorage("entries", entries);
 }
 
 
-// add an eventListener on form, and listen for submit event
-inputForm.addEventListener('submit', function(event) {
-    // prevent the page from reloading when submitting the form
-    event.preventDefault();
-    submitHandler();
-    //addEntry(inputField.value); // call addTodo function with input box current value
-  });
+
 
 
 

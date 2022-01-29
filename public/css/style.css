@@ -79,20 +79,27 @@ body{
 
 #left{
     height: 95%;
-    width: 100%;
+    width: 85%;
     /* padding: 20px; */
-    overflow: scroll;
-    -ms-overflow-style: none; /* for Internet Explorer, Edge */
-    scrollbar-width: none; /* for Firefox */
-    overflow-y: scroll; 
+    /* -ms-overflow-style: none; for Internet Explorer, Edge */
+    /* scrollbar-width: none; for Firefox */
     display:flex;
     flex-direction: column;
     justify-content: flex-end;
 }
-#left::-webkit-scrollbar {
-    display: none; /* for Chrome, Safari, and Opera */
+
+
+
+
+#item-box {
+    height: 100%;
+    -ms-overflow-style: none; /*for Internet Explorer, Edge*/
+    scrollbar-width: none; /*for Firefox*/
 }
 
+#item-box::-webkit-scrollbar{
+    display: none; /* for CHrome, Safari and Opera*/
+}
 .note-container {
     height: 100%;
     display: flex;
@@ -195,10 +202,13 @@ body{
 
 #right{
     height: 100%;
-    width: 8%;
+    width: 15%;
     border-left: dotted 3px #00ff0d;
     padding: 10px 10px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 footer {
@@ -242,6 +252,7 @@ button{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: auto;
     /* box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.75) */
 }
 
