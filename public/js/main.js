@@ -14,9 +14,14 @@ Need a way to "format" the text, <l> will make a line break <b bold text> <! imp
 
 for the edit function the focus needs to allow you to focus on the edirt form
 
-so for the edit view, get rid of the main input, make it line nano command, 
+so for the edit view, get rid of the main input, make it line nano command
+
+in edit mode neeed to fix it so text has title too
 
 
+gotta fix edit from open item, it doesnt change to edit
+
+hashtag sorting stopped working
 
 */
 
@@ -40,6 +45,11 @@ const inputField = document.getElementById('control-input');
 let entries = [];
 let deletedEntries = [];
 
+
+// setting scroll position
+window.onload=function () {
+    itemBox.scrollTop = itemBox.scrollHeight;
+}
 
 
 // This event listener keeps the input focus, unless text is selected.
@@ -337,7 +347,7 @@ function renderEntries(entries){
     
     trash.innerHTML = "";
     itemBox.innerHTML = "";
-    for(let i = entries.length - 1; i >= 0; i--){
+    for(let i = 0; i < entries.length; i++){
         //seeing if entry is completed
         // const checked = entries[i].completed ? 'checked' : null;
         if(entries[i].completed === false){
@@ -363,15 +373,10 @@ function renderEntries(entries){
   
 }
 
-function renderTrash(){
-    // deletedEntries.forEach(trashItem =>{
-    //     trash.innerHTML += `${trashItem.title}<br>`;
-    // })
-    
+function renderTrash(){ 
     entries.forEach(entry =>{
         if(entry.completed === true){
                 trash.innerHTML += `${entry.title}<br>`;
-            
         }
     })
 }
@@ -470,22 +475,36 @@ function editEntry(identifier){
         if(identifier == entry.id){
             console.log(`identifier == entry.id: ${identifier == entry.id}`)
             console.log(`edit identifier is: ${identifier}`);
+            itemBox.innerHTML = ""
+            inputField.defaultValue = `${entry.title}-- ${entry.text}`;
+
+            //setting the cursor to star at end of text area
+            inputField.setSelectionRange(inputField.value.length, inputField.value.length);
+
+        //     left.innerHTML = `
+        //     <form class="todo-form" id="todo-form" action="#0"> 
+        //     <!-- <input type="text" id="control-input" autofocus> -->
+        //     <div class="grow-wrap">
+        //         <textarea name="control-input" rows="1" id="control-input" onInput="this.parentNode.dataset.replicatedValue = this.value"></textarea>
+        //     </div>
+        //   </form>
             
-                left.innerHTML = `
+        //     `
+                // left.innerHTML = `
                             
-                            <form id="edit-form" data-key=${entry.id}>
-                            <input type="text" id="edit-title" value="${entry.title}" autofocus>
-                            <textarea style="resize:none;" name="" id="edit-text" cols="30" rows="10">${entry.text}</textarea>
-                        <button type="submit" id="enter">Enter</button>
-                      </form>
-                            <div class="item-footer">
-                                <h5>${entry.dateAdd} : ${entry.tags}</h5>
-                                <div class="edit-delete">
-                                <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
-                                </div>
-                            </div>
+                //             <form id="edit-form" data-key=${entry.id}>
+                //             <input type="text" id="edit-title" value="${entry.title}" autofocus>
+                //             <textarea style="resize:none;" name="" id="edit-text" cols="30" rows="10">${entry.text}</textarea>
+                //         <button type="submit" id="enter">Enter</button>
+                //       </form>
+                //             <div class="item-footer">
+                //                 <h5>${entry.dateAdd} : ${entry.tags}</h5>
+                //                 <div class="edit-delete">
+                //                 <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                //                 </div>
+                //             </div>
                        
-                `;
+                // `;
                 console.log(entry.title)
                 
         } else if(identifier == entry.title){
@@ -511,27 +530,7 @@ function editEntry(identifier){
         
     }))
 
-    const editForm = document.getElementById('edit-form');
-    const editTitleInput = document.getElementById('edit-title');
-    const editTextInput = document.getElementById('edit-text');
-    
-    editForm.addEventListener('submit', ()=>{
-        event.preventDefault();
-        entries.forEach(item =>{
-            if(item.id == editForm.getAttribute('data-key')){
-                console.log(`Title : ${item.title} || Title value: ${editTitleInput.value}`)
-                console.log(`Text : ${item.text} || Text value: ${editTextInput.value}`)
-                editTitleInput.value !== "" ? item.title = editTitleInput.value : item.title = 'Untitled';
-                
-                item.text = editTextInput.value;
-                item.tags = tagHandler(editTextInput.value);
-            }
-        })
-
-        addToLocalStorage("entries",entries);
-        // renderHashtags(entries)
-
-    });
+  
 
 }
 
@@ -545,73 +544,10 @@ entries.forEach(entry =>{
 })
 addToLocalStorage("entries", entries);
 
-// console.log(res)
-    // entries.forEach(entry =>{
-    //     if(identifier == entry.id){
-    //         entry.completed = true;
-    //     }
-    // });
-
-// entries.forEach((entry=>{
-//     if(identifier == entry.id){
-
-        
-//         entries = entries.filter((item)=>{
-//             // userAlert.innerText = `Deleted ${item.title}`
-//                     // types are dif, so not using !==
-//                     return item.id != identifier;
-//                 });
-        
-//     } else if(identifier == entry.title){
-
-//         deletedEntries = entries.filter(item =>{
-//             return item.id == identifier;
-//         });
-
-
-//         entries = entries.filter((item)=>{
-//             // userAlert.innerText = `Deleted ${item.title}`
-//                     return item.title != identifier;
-//                 });
-//     } else {
-//         // userAlert.innerText = 'Could not delete that!'
-//     }
-// }))
-
-
-//     // addToLocalStorage("deletedEntries", deletedEntries);
     
 }
 
 
-
-
-
-
-// document.addEventListener('click', (event)=>{
-//     if(event.target.closest('.item')){
-//         let curItem = document.querySelector(`[data-key='${event.target.closest('.item').dataset.key}']`);
-
-//         // targeting the entry text need to size it on click to hide and unhide text.
-//         let entryTxt = document.getElementById('txt');
-//         // console.log(curItem)
-
-//     // if(event.target !== this || event.target === this){
-//         if(curItem.classList[1] !== 'expand-height'){
-//             curItem.classList.remove('contract-height');
-//             curItem.classList.add('expand-height');
-//             // entryTxt.classList.remove('contract-height');
-//             // entryTxt.classList.add('expand-height');
-//         } else {
-//             curItem.classList.remove('expand-height');
-//             curItem.classList.add('contract-height');
-//             // entryTxt.classList.remove('contract-height');
-//             // entryTxt.classList.add('expand-height');
-//         }
-
-//     } 
-    
-// })
 
 
 entries.forEach(entry =>{
