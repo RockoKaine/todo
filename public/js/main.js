@@ -1,20 +1,10 @@
 /*
 
 
-note/todo app
-
-items should have:
--title
--content
--date created
--date completed
--edit
--delete
-
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
 
-Need to make sure the error messages get set up
+Need to make sure the messages get set up
 
 
 Need a way to "format" the text, <l> will make a line break <b bold text> <! important text(diff color)>
@@ -156,6 +146,13 @@ titleCount = entries.filter(item => item.name === text).length;
 
 
 
+function rerenderer(){
+    renderEntries()
+    renderHashtags()
+    renderTrash()
+}
+
+
 function searchRender(query){
 
     let queryResults = elasticIndex.search(query);
@@ -178,7 +175,7 @@ function renderHashtags (entries) {
     let tagsArr = [];
 
     entries.forEach(item =>{
-        if(item.tags != null){
+        if(item.tags != null && !item.completed){
             tagsArr.push(...item.tags)
         } 
             
@@ -333,10 +330,16 @@ function addEntry(item){
 function textMarkup(text){
     // Looking for <li Anything that goes in here  >
     let regExLi = /<li(.*)>/g;
+    let regExBold = /<b(.*)>/g;
     // Searching the text for the list item
     
     
     // take each item in list array and place them in a ul as li
+
+    let wordsToBold = [];
+
+    
+
     
     if(text.match(regExLi)){
         let theList = ``;

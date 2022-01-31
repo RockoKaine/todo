@@ -111,6 +111,9 @@ The left side
 #item-box {
     height: 100%;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 #item-box::-webkit-scrollbar { 
