@@ -1,5 +1,8 @@
 /*
 
+text area accepts html oh no!
+
+
 
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
@@ -122,8 +125,6 @@ const helpTxt = `
 
                     /edit My Title (This command allows you to edit the specified post)
 
-                    /uncomplete My Title (Uncompletes the entry by unchecking your last checked item)
-
                     /delete My Title (This command allows you to delete the specified post)
 
                     /home (Home Command will bring you back to the home page of all of your entries)
@@ -134,7 +135,7 @@ const helpTxt = `
 
                     All titles must be unique, in the event you reuse a title the apropriate number will be appended. To title you entry type your desired text followed by -- (This is my Title--). Note a title is not required. If you do not specify a title it will be named Untitled.
                     
-                    Anything after the -- Will be body text. If you did not give the entry a title anything you type will automatically be body text. You may find yourself needing to stylize your text, these are available: <b bold text > <i italic text > <u underlined text >
+                    Anything after the -- Will be body text. If you did not give the entry a title anything you type will automatically be body text.
 
                     Inside of the body text you can use <li > to create a todo list, to create a list item type ** at the end of the previous list item i.e. <li This is one ** Now two ** And three etc. >. One  item list do not need ** <li One item >.
                     
@@ -330,13 +331,10 @@ function addEntry(item){
 function textMarkup(text){
     // Looking for <li Anything that goes in here  >
     let regExLi = /<li(.*)>/g;
-    let regExBold = /<b(.*)>/g;
     // Searching the text for the list item
     
     
     // take each item in list array and place them in a ul as li
-
-    let wordsToBold = [];
 
     
 
