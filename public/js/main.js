@@ -419,7 +419,7 @@ function renderItem(identifier){
 
                             <div class="note-container">
                             <h1>${entry.title}</h1>
-                            <p>${entry.text}</p>
+                            <p>${textMarkup(entry.text)}</p>
                             <div class="note-footer">
                                 <h5>${entry.dateAdd} : ${entry.tags}</h5>
                                 <div class="edit-delete">
