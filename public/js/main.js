@@ -1,9 +1,5 @@
 /*
 
-text area accepts html oh no!
-
-
-
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
 
@@ -13,21 +9,10 @@ Need to make sure the messages get set up
 Need a way to "format" the text, <l> will make a line break <b bold text> <! important text(diff color)>
 
 
-hashtag sorting stopped working
-i think the hashtags are not working because they didnt exist, i removed the entry and tags still there
-i think i sould render hashtags without the trash one, or maybe with 
-
-
 for trash/tags if names are too long add ...
 
 
 need to be able to delete trash and set trash to delete item after 7 days. also need to restore trash item.
-
-
-wanted to keep text area formatting but need a rich text editor look into it maybe liked quill but feels like a lot... idk though
-
-
-
 
 in note commands:
     <li First thing-- Second -- Third> ** this is a list 
@@ -36,8 +21,6 @@ in note commands:
 
 */
 
-
-//pointless not just wanna test something so making a change
 
 
 
@@ -213,6 +196,15 @@ function hashTagFilter(hashtag){
   }
 
 
+  // no html allowed 
+
+  function sanitizer(text){
+      if(text.match(/<(.*)>/g)){
+         text = text.replace( /(<([^>]+)>)/ig, '')
+        }
+        return text;
+  }
+
 // titleCounter checks the titles to see if there are any duplicate titles and appends a number to the repeat title
 
 function titleCounter(text){
@@ -301,6 +293,7 @@ function addEntry(item){
 
     let itemTitle = item.substring(0, item.indexOf('--')).trim();
     let itemText = item.substring(item.indexOf('--')).replace('--','').trim();
+    itemText = sanitizer(itemText)
     itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("")     
     
     if(item !== ''){
@@ -329,8 +322,8 @@ function addEntry(item){
 
 
 function textMarkup(text){
-    // Looking for <li Anything that goes in here  >
-    let regExLi = /<li(.*)>/g;
+    // Looking for (li Anything that goes in here  )
+    let regExLi = /\(li(.*)\)/g;
     // Searching the text for the list item
     
     
@@ -354,7 +347,6 @@ function textMarkup(text){
     
             text = text.replace(regExLi, `<ul>
                                             ${theList}
-                                            Add item++ 
                                          </ul>`);
             return text;
         
@@ -400,7 +392,7 @@ function renderEntries(entries){
 function renderTrash(){ 
     entries.forEach(entry =>{
         if(entry.completed === true){
-                trash.innerHTML += `${entry.title}<br>`;
+                trash.innerHTML += `<a href='#' data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
         }
     })
 }
@@ -419,7 +411,7 @@ function renderItem(identifier){
 
                             <div class="note-container">
                             <h1>${entry.title}</h1>
-                            <p>${entry.text}</p>
+                            <p>${textMarkup(entry.text)}</p>
                             <div class="note-footer">
                                 <h5>${entry.dateAdd} : ${entry.tags}</h5>
                                 <div class="edit-delete">
