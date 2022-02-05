@@ -1,5 +1,10 @@
 /*
 
+need untrash items 
+
+clear after 7 days in trash
+
+
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
 
@@ -530,9 +535,29 @@ function deleteEntry(identifier){
 console.log(identifier)
 
 entries.forEach(entry =>{
+
     if(entry.id == identifier){
-        entry.completed = true
+        if(!entry.completed){
+            entry.completed = true;
+        } else {
+           entries = entries.filter(item => item.id != identifier)
+        }
+    } else if(entry.title == identifier){
+        if(!entry.completed){
+            entry.completed = true;
+        } else {
+           entries = entries.filter(item => item.title != identifier)
+        }
     }
+
+    // if(entry.id == identifier){
+    //     if(!entry.completed){
+    //         entry.completed = true
+    //     } else {
+    //         entries = entries.filter(entry => entry)
+    //     }
+
+    // }
 })
 addToLocalStorage("entries", entries);
 
