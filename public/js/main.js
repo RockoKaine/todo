@@ -1,9 +1,6 @@
 /*
 
-need untrash items 
-
-clear after 7 days in trash
-
+remove trash is only 10 mins right now it needs to be 604,800,000
 
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
@@ -16,16 +13,12 @@ Need a way to "format" the text, <l> will make a line break <b bold text> <! imp
 
 for trash/tags if names are too long add ...
 
-
-need to be able to delete trash and set trash to delete item after 7 days. also need to restore trash item.
-
 in note commands:
     <li First thing-- Second -- Third> ** this is a list 
     <b Bold me!> ** this will bee bold
     <e this will be italics>
 
 */
-
 
 
 
@@ -420,7 +413,7 @@ function renderItem(identifier){
                             <div class="note-footer">
                                 <h5>${entry.dateAdd} : ${entry.tags}</h5>
                                 <div class="edit-delete">
-                                <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                                ${entry.completed ? `<span id="edit-btn" onclick="untrashEntry(this.dataset.key)" data-key=${entry.id}>Untrash</span>` : '<span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=entry.id>Edit</span>'}  /  <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
                                 </div>
                             </div>
                        
@@ -539,12 +532,14 @@ entries.forEach(entry =>{
     if(entry.id == identifier){
         if(!entry.completed){
             entry.completed = true;
+            entry.trashedDate =  Date.now();
         } else {
-           entries = entries.filter(item => item.id != identifier)
+            entries = entries.filter(item => item.id != identifier)
         }
     } else if(entry.title == identifier){
         if(!entry.completed){
             entry.completed = true;
+            entry.trashedDate =  Date.now();
         } else {
            entries = entries.filter(item => item.title != identifier)
         }
@@ -565,9 +560,42 @@ addToLocalStorage("entries", entries);
 }
 
 
+function removeOldTrash(){
+    // removing items from trassh if 7 dyas or older
+    let keepEntries = [];
+
+    entries.forEach(item =>{
+        if(!item.trashedDate || Date.now() - item.trashedDate < 6000000){
+            keepEntries.push(item);
+        }
+    })
+        entries = keepEntries;        
+        addToLocalStorage("entries", entries);
+    
+
+}
+
+function untrashEntry (identifier){
+
+    entries.forEach(entry => {
+        if(entry.id == identifier){
+
+                entry.completed = false;
+            
+        } else if(entry.title == identifier){
+
+            entry.completed = false;
+        
+    }
+    })
+    addToLocalStorage("entries", entries);
+  
+}
 
 
 entries.forEach(entry =>{
     elasticIndex.addDoc(entry);
 })
 renderHashtags(entries);
+
+window.onload = removeOldTrash();
