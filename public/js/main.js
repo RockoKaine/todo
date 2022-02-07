@@ -291,7 +291,7 @@ function addEntry(item){
 
     let itemTitle = item.substring(0, item.indexOf('--')).trim();
     let itemText = item.substring(item.indexOf('--')).replace('--','').trim();
-    itemText = sanitizer(itemText)
+    // itemText = sanitizer(itemText)
     itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("")     
     
     if(item !== ''){
@@ -321,16 +321,30 @@ function addEntry(item){
 
 function textMarkup(text){
     // Looking for (li Anything that goes in here  )
-    let regExLi = /\(li(.*)\)/g;
+    let regExLi =   /\(li([^()]+)\)/g;
+    // let regExLi =   /\(li(.*)\)/g;
+    let regExBold = /\(b([^()]+)\)/g;
+    let regExAny =  /\(li|b|e(.*)\)/g;
     // Searching the text for the list item
     
     
     // take each item in list array and place them in a ul as li
 
-    
+    //search for  regex or values
 
     
-    if(text.match(regExLi)){
+// if(text.match(regExAny)){
+    
+// }else { 
+//     return text;
+//  }
+
+
+text = text.replaceAll(regExBold, text => `<strong>${text}</strong>`)
+
+
+
+    if(text.match(regExAny)){
         let theList = ``;
         let listArr = text.match(regExLi)[0].substring(3,text.match(regExLi)[0].length - 1).split("**");
         listArr.forEach(listItem =>{
@@ -346,12 +360,10 @@ function textMarkup(text){
             text = text.replace(regExLi, `<ul>
                                             ${theList}
                                          </ul>`);
-            return text;
+            return text ;
         
-    }
-
-    else {
-        return text;
+    } else {
+        return text.replaceAll(regExBold, text => `<strong>${text}</strong>`);
     }
 
 }
@@ -565,7 +577,7 @@ function removeOldTrash(){
     let keepEntries = [];
 
     entries.forEach(item =>{
-        if(!item.trashedDate || Date.now() - item.trashedDate < 6000000){
+        if(!item.trashedDate || Date.now() - item.trashedDate < 60000){
             keepEntries.push(item);
         }
     })
@@ -581,10 +593,12 @@ function untrashEntry (identifier){
         if(entry.id == identifier){
 
                 entry.completed = false;
-            
-        } else if(entry.title == identifier){
-
-            entry.completed = false;
+                delete entry.trashedDate;
+                
+            } else if(entry.title == identifier){
+                
+                entry.completed = false;
+                delete entry.trashedDate;
         
     }
     })
