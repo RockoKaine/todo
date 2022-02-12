@@ -1,22 +1,21 @@
 /*
 
+edit messgae says created
+
+make sure edit command and untrash work
+
 remove trash is only 10 mins right now it needs to be 604,800,000
 
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
+search wont return trash, think it should but give diff title color
+I think that trash doesnt render right because of how i do the entries.
+i change the entries and that changes trash
+S
 
 Need to make sure the messages get set up
 
-
-Need a way to "format" the text, <l> will make a line break <b bold text> <! important text(diff color)>
-
-
 for trash/tags if names are too long add ...
-
-in note commands:
-    <li First thing-- Second -- Third> ** this is a list 
-    <b Bold me!> ** this will bee bold
-    <e this will be italics>
 
 */
 
@@ -26,6 +25,7 @@ in note commands:
 const btn = document.getElementById('enter'); 
 const left = document.getElementById('left'); 
 const itemBox = document.getElementById('item-box');
+const itemScrollBox = document.getElementById('item-scroll');
 const right = document.getElementById('right'); 
 const hashContainer = document.getElementById('hash-container'); 
 const editTextField =  document.getElementById('edit-text');
@@ -41,9 +41,9 @@ let deletedEntries = [];
 
 
 // setting scroll position
-window.onload=function () {
-    itemBox.scrollTop = itemBox.scrollHeight;
-}
+// window.onload = ()=> {
+//     itemScrollBox.scrollTop = itemScrollBox.scrollHeight;
+// }
 
 
 // making the enter key submit the form and shift+enter adding new line
@@ -128,29 +128,53 @@ titleCount = entries.filter(item => item.name === text).length;
 
 
 
-function rerenderer(){
-    renderEntries()
-    renderHashtags()
-    renderTrash()
-}
+// function rerenderer(entries){
+//     renderEntries(entries)
+//     renderHashtags(entries)
+//     renderTrash()
+// }
 
 
 function searchRender(query){
 
+    let searchEntries = [];
     let queryResults = elasticIndex.search(query);
 
     if(queryResults.length > 0){
-        let ogEntries = entries;
-        entries = [];
+        // let ogEntries = entries;
+        // entries = [];
 
         queryResults.forEach(res =>{
-            let resToPush = ogEntries.find(item => item.id == res.doc.id)
-            entries.push(resToPush)
+            let resToPush = entries.find(item => item.id == res.doc.id)
+            searchEntries.push(resToPush)
         });
     }
 
 
-    renderEntries(entries);
+    renderTrash();
+    itemBox.innerHTML = ""
+    searchEntries.forEach(entry =>{
+
+        itemBox.innerHTML += `
+        <div class="item" data-key="${entry.id}">
+                    <div class="title" data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
+                        <h2>${entry.title}</h2>
+                    </div>
+                    
+                    <div class="item-footer">
+                        <h5>${entry.dateAdd} : ${entry.tags ? entry.tags.join(' ') : "No Tags"}</h5>
+                        <div class="edit-delete">
+                        <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                        </div>
+                    </div>
+                </div>
+        `
+
+    })
+
+
+    // renderEntries(ogEntries);
+    // rerenderer(entries);
 }
 
 function renderHashtags (entries) {
@@ -159,15 +183,17 @@ function renderHashtags (entries) {
     entries.forEach(item =>{
         if(item.tags != null && !item.completed){
             tagsArr.push(...item.tags)
-        } 
             
+        } 
+            console.log('tags array '+tagsArr)
     })
 
     // this creates a new array that has no duplicates.
     let tagsSlim = Array.from(new Set(tagsArr));
 
     tagsSlim.forEach(tag =>{
-        hashContainer.innerHTML += `<a href="#" onclick="renderEntries(hashTagFilter('${tag}'))">${tag}</a><br>`;
+        console.log('the tag hoe '+tag)
+        hashContainer.innerHTML += `<a href="#" onclick="hashTagFilter('${tag}')">${tag}</a><br>`;
     })
 
 }
@@ -189,7 +215,26 @@ function hashTagFilter(hashtag){
         filteredRes.push(entry)
       }
     })
-    return filteredRes
+   
+    itemBox.innerHTML= '';
+    filteredRes.forEach(entry =>{
+
+        itemBox.innerHTML += `
+        <div class="item" data-key="${entry.id}">
+                    <div class="title" data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
+                        <h2>${entry.title}</h2>
+                    </div>
+                    
+                    <div class="item-footer">
+                        <h5>${entry.dateAdd} : ${entry.tags ? entry.tags.join(' ') : "No Tags"}</h5>
+                        <div class="edit-delete">
+                        <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                        </div>
+                    </div>
+                </div>
+        `
+
+    })
   
   }
 
@@ -254,28 +299,41 @@ function submitHandler(){
 
                 case '/delete':
                     deleteEntry(event.target.elements[0].value.slice(8))
+                    inputField.value = "";
+
                     break;
 
                 case '/edit':
                     console.log('edit typed')
-                    editEntry(event.target.elements[0].value.slice(6))
+                    editEntry(event.target.elements[0].value.slice(6).trim())
+                    
                     break;
                 case '/rkaine':
                     console.log('edit typed')
                     renderItem(event.target.elements[0].value.slice(6))
+            inputField.value = "";
+
                     break;
 
                 case '/help':
                     left.innerText = helpTxt;
+            inputField.value = "";
+
                     break;
                 case '/filter':
                     renderEntries(hashTagFilter(inputField.value.slice(8)))
+            inputField.value = "";
+
                     break;
                 case '/search':
                     searchRender(inputField.value.slice(8))
+            inputField.value = "";
+
                     break;
                 case '/home':
                     renderEntries(entries)
+            inputField.value = "";
+
                     break;
                 default:
                     console.log("defaulted")
@@ -284,7 +342,11 @@ function submitHandler(){
         } else {
             addEntry(inputField.value);
         }
-        inputField.value = "";
+
+        // if(inputField.value.match(regExpr)[0] !== '/edit'){
+
+        //     inputField.value = "";
+        // }
 }
 
 function addEntry(item){
@@ -322,49 +384,36 @@ function addEntry(item){
 function textMarkup(text){
     // Looking for (li Anything that goes in here  )
     let regExLi =   /\(li([^()]+)\)/g;
-    // let regExLi =   /\(li(.*)\)/g;
     let regExBold = /\(b([^()]+)\)/g;
-    let regExAny =  /\(li|b|e(.*)\)/g;
-    // Searching the text for the list item
-    
-    
-    // take each item in list array and place them in a ul as li
+    let regExItalics = /\(i([^()]+)\)/g;
+    let regExImportant = /\(!([^()]+)\)/g;
+    // let regExAny =  /\(li|b|e(.*)\)/g;
+ 
+        text = text.replaceAll(regExItalics, src => `<em>${src.replaceAll(/\(i|\)/g,'')}</em>`)
+        text = text.replaceAll(regExImportant, src => `<span class="note-important">${src.replaceAll(/\(!|\)/g,'')}</span>`)
+        text = text.replaceAll(regExBold, src => `<strong>${src.replaceAll(/\(b|\)/g,'')}</strong>`)
 
-    //search for  regex or values
-
-    
-// if(text.match(regExAny)){
-    
-// }else { 
-//     return text;
-//  }
-
-
-text = text.replaceAll(regExBold, text => `<strong>${text}</strong>`)
-
-
-
-    if(text.match(regExAny)){
+    if(text.match(regExLi)){
         let theList = ``;
+        
         let listArr = text.match(regExLi)[0].substring(3,text.match(regExLi)[0].length - 1).split("**");
         listArr.forEach(listItem =>{
             console.log('list item ',listItem)
-            theList += `<li>
-            
-            ${listItem}
-            </li> `;
+            theList += `<li>${listItem}</li> `;
         });
     
         
-    
-            text = text.replace(regExLi, `<ul>
-                                            ${theList}
-                                         </ul>`);
+            
+            text = text.replace(regExLi, `<ul>${theList}</ul>`);
+
+            
             return text ;
         
     } else {
-        return text.replaceAll(regExBold, text => `<strong>${text}</strong>`);
+
+        return text.replaceAll(regExBold, src => `<strong>${src.replaceAll(/\(b|\)/g,'')}</strong>`).replaceAll(regExItalics, src => `<em>${src.replaceAll(/\(b|\)/g,'')}</em>`);
     }
+    
 
 }
 
@@ -373,28 +422,34 @@ function renderEntries(entries){
     
     trash.innerHTML = "";
     itemBox.innerHTML = "";
-    for(let i = 0; i < entries.length; i++){
+    // for(let i = 0; i < entries.length; i++){
+        entries.forEach(entry =>{
+
         //seeing if entry is completed
         // const checked = entries[i].completed ? 'checked' : null;
-        if(entries[i].completed === false){
+        if(entry.completed === false){
 
             itemBox.innerHTML += `
-        <div class="item" data-key="${entries[i].id}">
-                    <div class="title" data-key="${entries[i].id}" onclick="renderItem(this.dataset.key)">
-                        <h2>${entries[i].title}</h2>
+        <div class="item" data-key="${entry.id}">
+                    <div class="title" data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
+                        <h2>${entry.title}</h2>
                     </div>
                     
                     <div class="item-footer">
-                        <h5>${entries[i].dateAdd} : ${entries[i].tags ? entries[i].tags.join(' ') : "No Tags"}</h5>
+                        <h5>${entry.dateAdd} : ${entry.tags ? entry.tags.join(' ') : "No Tags"}</h5>
                         <div class="edit-delete">
-                        <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entries[i].id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entries[i].id}>Delete</span>
+                        <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
                         </div>
                     </div>
                 </div>
         `
+        } else {
+            trash.innerHTML += `<a href='#' data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
         }
 
-    }
+    })
+    
+    // renderTrash();
 
   
 }
@@ -416,16 +471,16 @@ function renderItem(identifier){
         if(identifier == entry.id){
             console.log(`identifier == entry.id: ${identifier == entry.id}`)
             console.log(`edit identifier is: ${identifier}`);
-            
+            let noteTxt = textMarkup(entry.text);
                 itemBox.innerHTML = `
 
                             <div class="note-container">
                             <h1>${entry.title}</h1>
-                            <p>${textMarkup(entry.text)}</p>
+                            <div class='note-text'>${noteTxt}</div>
                             <div class="note-footer">
                                 <h5>${entry.dateAdd} : ${entry.tags}</h5>
                                 <div class="edit-delete">
-                                ${entry.completed ? `<span id="edit-btn" onclick="untrashEntry(this.dataset.key)" data-key=${entry.id}>Untrash</span>` : '<span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=entry.id>Edit</span>'}  /  <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                                ${entry.completed ? `<span id="edit-btn" onclick="untrashEntry(this.dataset.key)" data-key=${entry.id}>Untrash</span>` : `<span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span>`}  /  <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
                                 </div>
                             </div>
                        
@@ -469,7 +524,7 @@ function addToLocalStorage(storageName, theEntries){
 
     // render to screen
     renderEntries(entries)
-    renderTrash()
+    // renderTrash()
 }
 
 function getFromLocalStorage(){
@@ -481,7 +536,7 @@ function getFromLocalStorage(){
         entries = JSON.parse(reference);
         
         renderEntries(entries)
-        renderTrash();
+        // renderTrash();
         
     }
 
@@ -499,33 +554,23 @@ function editEntry(identifier){
     entries.forEach((entry=>{
         
         if(identifier == entry.id){
-            console.log(`identifier == entry.id: ${identifier == entry.id}`)
-            console.log(`edit identifier is: ${identifier}`);
             itemBox.innerHTML = ""
-            inputField.defaultValue = `${entry.title}-- ${entry.text}`;
+            inputField.value = `${entry.title}-- ${entry.text}`;
 
             //setting the cursor to star at end of text area
             inputField.setSelectionRange(inputField.value.length, inputField.value.length);
 
                 console.log(entry.title)
                 
-        } else if(identifier == entry.title){
-            console.log(`identifier == entry.title: ${identifier == entry.title}`)
+        } else if(identifier === entry.title){
+            itemBox.innerHTML = ""
+            inputField.value = "";
 
-                left.innerHTML = `
-                            
-                            <form id="edit-form" data-key=${entry.id}>
-                            <input type="text" id="edit-title" value="${entry.title}" autofocus>
-                            <textarea style="resize:none;" name="" id="edit-text" cols="30" rows="10">${entry.text}</textarea>
-                        <button type="submit" id="enter">Enter</button>
-                      </form>
-                            <div class="item-footer">
-                                <h5>${entry.dateAdd} : ${entry.tags}</h5>
-                                <div class="edit-delete">
-                                <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
-                                </div>
-                            </div>
-                `;
+            inputField.value = `${entry.title}-- ${entry.text}`;
+
+            //setting the cursor to star at end of text area
+            inputField.setSelectionRange(inputField.value.length, inputField.value.length);
+
                 console.log(entry.title)
             
         } 
@@ -577,7 +622,7 @@ function removeOldTrash(){
     let keepEntries = [];
 
     entries.forEach(item =>{
-        if(!item.trashedDate || Date.now() - item.trashedDate < 60000){
+        if(!item.trashedDate || Date.now() - item.trashedDate < 60000000){
             keepEntries.push(item);
         }
     })
