@@ -15,7 +15,6 @@ S
 
 Need to make sure the messages get set up
 
-for trash/tags if names are too long add ...
 
 */
 
