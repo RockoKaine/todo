@@ -27,7 +27,7 @@ h1, h2{
 
 a{
     text-decoration: none;
-    color: #00b7ff;
+    color: #eeb600;
 }
 
 body{
@@ -181,7 +181,14 @@ The Right side
     flex-direction: column;
     align-items: center;
 }
-
+#right h3 {
+    color:#00ff0d;
+    border-bottom: solid 1px #00ff0d;
+    width: 98%;
+    margin-bottom: 10px;
+    padding-bottom: 2px;
+    
+}
 #right-container{
     overflow: auto;    
 }
@@ -191,8 +198,13 @@ The Right side
     height: 0;
 }
 
-#trash{
-    color: rgba(0,255,13, .25) ;
+
+
+.trash-links {
+    color: rgba(0,255,13, .5) ;
+}
+.trash-links:hover {
+    color: rgba(0,255,13, .95) ;
 }
 
 button{
@@ -201,7 +213,7 @@ button{
     height: 45px;
     width: 120px;
     font-size: 1.75rem;
-    color: yellowgreen;
+    color: rgb(0,255,13);
     cursor: pointer;
     display: flex;
     flex-direction: column;

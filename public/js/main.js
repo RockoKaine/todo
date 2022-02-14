@@ -206,7 +206,7 @@ function tagHandler(text){
 
 }
 
-
+// need to make if statement to controll if clicked or title used
 function hashTagFilter(hashtag){
     let filteredRes = [];
     entries.forEach(entry =>{
@@ -301,6 +301,11 @@ function submitHandler(){
                     inputField.value = "";
 
                     break;
+                case '/untrash':
+                    deleteEntry(event.target.elements[0].value.slice(8))
+                    inputField.value = "";
+
+                    break;
 
                 case '/edit':
                     console.log('edit typed')
@@ -320,7 +325,7 @@ function submitHandler(){
 
                     break;
                 case '/filter':
-                    renderEntries(hashTagFilter(inputField.value.slice(8)))
+                   hashTagFilter(inputField.value.slice(8))
             inputField.value = "";
 
                     break;
@@ -443,7 +448,7 @@ function renderEntries(entries){
                 </div>
         `
         } else {
-            trash.innerHTML += `<a href='#' data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
+            trash.innerHTML += `<a href='#' class="trash-links" data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
         }
 
     })
@@ -453,13 +458,13 @@ function renderEntries(entries){
   
 }
 
-function renderTrash(){ 
-    entries.forEach(entry =>{
-        if(entry.completed === true){
-                trash.innerHTML += `<a href='#' data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
-        }
-    })
-}
+// function renderTrash(){ 
+//     entries.forEach(entry =>{
+//         if(entry.completed === true){
+//                 trash.innerHTML += `<a href='#' class="trash-links" data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
+//         }
+//     })
+// }
 
 
 
