@@ -1,22 +1,9 @@
 /*
-
-edit messgae says created
-
-make sure edit command and untrash work
-
-remove trash is only 10 mins right now it needs to be 604,800,000
-
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
-search wont return trash, think it should but give diff title color
-I think that trash doesnt render right because of how i do the entries.
-i change the entries and that changes trash
-S
-
-Need to make sure the messages get set up
-
-
+double check the help text
 */
+
 
 
 
@@ -33,25 +20,19 @@ const trash = document.getElementById('trash');
 const inputForm = document.querySelector('.todo-form');
 const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
-// const userAlert = document.getElementById('user-alert');
+let trashedTitles = document.getElementsByClassName('trashed-title')
 
 let entries = [];
 let deletedEntries = [];
 
 
-// setting scroll position
-// window.onload = ()=> {
-//     itemScrollBox.scrollTop = itemScrollBox.scrollHeight;
-// }
 
 
-// making the enter key submit the form and shift+enter adding new line
 
 document.addEventListener('keypress', e => {
     if (e.code === 'Enter' && !e.shiftKey){
         e.preventDefault();
         btn.click();
-        // submitHandler();
     }
 })
 
@@ -79,7 +60,6 @@ inputForm.addEventListener('submit', function(event) {
     // prevent the page from reloading when submitting the form
     event.preventDefault();
     submitHandler();
-    //addEntry(inputField.value); // call addTodo function with input box current value
   });
 
 
@@ -127,21 +107,16 @@ titleCount = entries.filter(item => item.name === text).length;
 
 
 
-// function rerenderer(entries){
-//     renderEntries(entries)
-//     renderHashtags(entries)
-//     renderTrash()
-// }
-
 
 function searchRender(query){
+    entries.forEach(entry =>{
+    elasticIndex.addDoc(entry);
+})
 
     let searchEntries = [];
     let queryResults = elasticIndex.search(query);
 
     if(queryResults.length > 0){
-        // let ogEntries = entries;
-        // entries = [];
 
         queryResults.forEach(res =>{
             let resToPush = entries.find(item => item.id == res.doc.id)
@@ -149,31 +124,46 @@ function searchRender(query){
         });
     }
 
-
-    renderTrash();
     itemBox.innerHTML = ""
+
     searchEntries.forEach(entry =>{
 
-        itemBox.innerHTML += `
-        <div class="item" data-key="${entry.id}">
-                    <div class="title" data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
-                        <h2>${entry.title}</h2>
-                    </div>
-                    
-                    <div class="item-footer">
-                        <h5>${entry.dateAdd} : ${entry.tags ? entry.tags.join(' ') : "No Tags"}</h5>
-                        <div class="edit-delete">
-                        <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+        if(entry.completed){
+            itemBox.innerHTML += `
+            <div class="item" data-key="${entry.id}">
+                        <div  data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
+                            <h2 class="trashed-title">${entry.title}</h2>
+                        </div>
+                        
+                        <div class="item-footer">
+                            <h5>${entry.dateAdd} : ${entry.tags ? entry.tags.join(' ') : "No Tags"}</h5>
+                            <div class="edit-delete">
+                            <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-        `
+            `
+    
+        }else {
+    
+            itemBox.innerHTML += `
+            <div class="item" data-key="${entry.id}">
+                        <div class="title" data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
+                            <h2>${entry.title}</h2>
+                        </div>
+                        
+                        <div class="item-footer">
+                            <h5>${entry.dateAdd} : ${entry.tags ? entry.tags.join(' ') : "No Tags"}</h5>
+                            <div class="edit-delete">
+                            <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                            </div>
+                        </div>
+                    </div>
+            `
+        }
 
     })
 
-
-    // renderEntries(ogEntries);
-    // rerenderer(entries);
 }
 
 function renderHashtags (entries) {
@@ -210,28 +200,48 @@ function tagHandler(text){
 function hashTagFilter(hashtag){
     let filteredRes = [];
     entries.forEach(entry =>{
-      if(entry.tags.includes(hashtag)){
+      if(entry.tags != null && entry.tags.includes(hashtag)){
         filteredRes.push(entry)
-      }
+      } 
     })
    
     itemBox.innerHTML= '';
     filteredRes.forEach(entry =>{
 
-        itemBox.innerHTML += `
-        <div class="item" data-key="${entry.id}">
-                    <div class="title" data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
-                        <h2>${entry.title}</h2>
-                    </div>
-                    
-                    <div class="item-footer">
-                        <h5>${entry.dateAdd} : ${entry.tags ? entry.tags.join(' ') : "No Tags"}</h5>
-                        <div class="edit-delete">
-                        <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+        if(entry.completed){
+            itemBox.innerHTML += `
+            <div class="item" data-key="${entry.id}">
+                        <div  data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
+                            <h2 class="trashed-title">${entry.title}</h2>
+                        </div>
+                        
+                        <div class="item-footer">
+                            <h5>${entry.dateAdd} : ${entry.tags ? entry.tags.join(' ') : "No Tags"}</h5>
+                            <div class="edit-delete">
+                            <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-        `
+            `
+
+        }else {
+
+            itemBox.innerHTML += `
+            <div class="item" data-key="${entry.id}">
+                        <div class="title" data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
+                            <h2>${entry.title}</h2>
+                        </div>
+                        
+                        <div class="item-footer">
+                            <h5>${entry.dateAdd} : ${entry.tags ? entry.tags.join(' ') : "No Tags"}</h5>
+                            <div class="edit-delete">
+                            <span id="edit-btn" onclick="editEntry(this.dataset.key)" data-key=${entry.id}>Edit</span> / <span id="delete-btn" onclick="deleteEntry(this.dataset.key)" data-key=${entry.id}>Delete</span>
+                            </div>
+                        </div>
+                    </div>
+            `
+        }
+
 
     })
   
@@ -301,8 +311,13 @@ function submitHandler(){
                     inputField.value = "";
 
                     break;
+                    case '/emptytrash':
+                    emptryTrash()
+                    inputField.value = "";
+
+                    break;
                 case '/untrash':
-                    deleteEntry(event.target.elements[0].value.slice(8))
+                    untrashEntry(event.target.elements[0].value.slice(9))
                     inputField.value = "";
 
                     break;
@@ -335,6 +350,7 @@ function submitHandler(){
 
                     break;
                 case '/home':
+                    location.reload();
                     renderEntries(entries)
             inputField.value = "";
 
@@ -347,20 +363,19 @@ function submitHandler(){
             addEntry(inputField.value);
         }
 
-        // if(inputField.value.match(regExpr)[0] !== '/edit'){
-
-        //     inputField.value = "";
-        // }
+    
 }
 
 function addEntry(item){
 
     let itemTitle = item.substring(0, item.indexOf('--')).trim();
     let itemText = item.substring(item.indexOf('--')).replace('--','').trim();
-    // itemText = sanitizer(itemText)
-    itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("")     
     
     if(item !== ''){
+        
+        entries = entries.filter(entry => entry.isEditing != true);
+        itemTitle = itemTitle !== "" ? itemTitle = titleCounter(itemTitle) : itemTitle = titleCounter("")     
+
         const entry = { 
             id: Date.now(),
             dateAdd: new Date().toDateString(),
@@ -375,7 +390,6 @@ function addEntry(item){
             hashContainer.innerHTML = "";
         renderHashtags(entries);
         inputField.value = "";
-        itemBox.innerHTML += `${itemTitle}, has been successfully created!`
     } else if (item === ''){
         itemBox.innerHTML += `<p>Could not do that try again.</p>`
 
@@ -391,7 +405,6 @@ function textMarkup(text){
     let regExBold = /\(b([^()]+)\)/g;
     let regExItalics = /\(i([^()]+)\)/g;
     let regExImportant = /\(!([^()]+)\)/g;
-    // let regExAny =  /\(li|b|e(.*)\)/g;
  
         text = text.replaceAll(regExItalics, src => `<em>${src.replaceAll(/\(i|\)/g,'')}</em>`)
         text = text.replaceAll(regExImportant, src => `<span class="note-important">${src.replaceAll(/\(!|\)/g,'')}</span>`)
@@ -426,11 +439,9 @@ function renderEntries(entries){
     
     trash.innerHTML = "";
     itemBox.innerHTML = "";
-    // for(let i = 0; i < entries.length; i++){
         entries.forEach(entry =>{
 
         //seeing if entry is completed
-        // const checked = entries[i].completed ? 'checked' : null;
         if(entry.completed === false){
 
             itemBox.innerHTML += `
@@ -448,23 +459,18 @@ function renderEntries(entries){
                 </div>
         `
         } else {
-            trash.innerHTML += `<a href='#' class="trash-links" data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
+            // need to make it a function with event litener
+            trash.innerHTML += `<div class="trashed-div"><a href='#' class="trash-links" data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a></div>`;
+            // trash.innerHTML += `<a href='#' class="trash-links" data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
         }
 
     })
     
-    // renderTrash();
 
   
 }
 
-// function renderTrash(){ 
-//     entries.forEach(entry =>{
-//         if(entry.completed === true){
-//                 trash.innerHTML += `<a href='#' class="trash-links" data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
-//         }
-//     })
-// }
+
 
 
 
@@ -528,7 +534,6 @@ function addToLocalStorage(storageName, theEntries){
 
     // render to screen
     renderEntries(entries)
-    // renderTrash()
 }
 
 function getFromLocalStorage(){
@@ -540,7 +545,6 @@ function getFromLocalStorage(){
         entries = JSON.parse(reference);
         
         renderEntries(entries)
-        // renderTrash();
         
     }
 
@@ -555,9 +559,14 @@ getFromLocalStorage();
 
 
 function editEntry(identifier){
+
+    // set it so when you pick a for edit editing true then once it has been updated remove it.
+
     entries.forEach((entry=>{
         
         if(identifier == entry.id){
+            entry.isEditing = true;
+
             itemBox.innerHTML = ""
             inputField.value = `${entry.title}-- ${entry.text}`;
 
@@ -567,6 +576,8 @@ function editEntry(identifier){
                 console.log(entry.title)
                 
         } else if(identifier === entry.title){
+            entry.isEditing = true;
+
             itemBox.innerHTML = ""
             inputField.value = "";
 
@@ -602,19 +613,12 @@ entries.forEach(entry =>{
             entry.completed = true;
             entry.trashedDate =  Date.now();
         } else {
-           entries = entries.filter(item => item.title != identifier)
+            entries = entries.filter(item => item.title != identifier)
         }
     }
-
-    // if(entry.id == identifier){
-    //     if(!entry.completed){
-    //         entry.completed = true
-    //     } else {
-    //         entries = entries.filter(entry => entry)
-    //     }
-
-    // }
-})
+    
+ 
+    })
 addToLocalStorage("entries", entries);
 
     
@@ -626,7 +630,7 @@ function removeOldTrash(){
     let keepEntries = [];
 
     entries.forEach(item =>{
-        if(!item.trashedDate || Date.now() - item.trashedDate < 60000000){
+        if(!item.trashedDate || Date.now() - item.trashedDate < 604800000){
             keepEntries.push(item);
         }
     })
@@ -634,6 +638,11 @@ function removeOldTrash(){
         addToLocalStorage("entries", entries);
     
 
+}
+
+function emptryTrash(){
+    entries = entries.filter(entry => entry.completed != true)
+    addToLocalStorage("entries", entries);
 }
 
 function untrashEntry (identifier){
@@ -649,16 +658,14 @@ function untrashEntry (identifier){
                 entry.completed = false;
                 delete entry.trashedDate;
         
-    }
+    } 
     })
     addToLocalStorage("entries", entries);
   
 }
 
 
-entries.forEach(entry =>{
-    elasticIndex.addDoc(entry);
-})
 renderHashtags(entries);
 
 window.onload = removeOldTrash();
+
