@@ -3,8 +3,13 @@ I wanna make it so when page loads we get a special boot up image like with term
 
 double check the help text
 
-text-area not scrollable
-neither is diplay if entry text too big
+tags should be a pop-up menu
+
+changing while in edit doesnt change edit are
+
+
+
+
 */
 
 
@@ -459,6 +464,7 @@ function renderEntries(entries){
     
     trash.innerHTML = "";
     itemBox.innerHTML = "";
+    inputField.style.removeProperty('height')
         entries.forEach(entry =>{
 
         //seeing if entry is completed
@@ -480,7 +486,8 @@ function renderEntries(entries){
         `
         } else {
             // need to make it a function with event litener
-            trash.innerHTML += `<div class="trashed-div"><a href='#' class="trash-links" data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a></div>`;
+            // using the title tag to show "alt text"
+            trash.innerHTML += `<div class="trashed-div"><a href='#' title="${entry.title}" class="trash-links" data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title.length > 17 ? entry.title.slice(0,17)+'...': entry.title}</a></div>`;
             // trash.innerHTML += `<a href='#' class="trash-links" data-key=${entry.id} onclick='renderItem(this.dataset.key)'>${entry.title}</a><br>`;
         }
 
@@ -495,7 +502,8 @@ function renderEntries(entries){
 
 
 function renderItem(identifier){
-
+inputField.value = "";
+inputField.style.removeProperty('height');
     entries.forEach((entry=>{
         
         if(identifier == entry.id){
@@ -518,6 +526,7 @@ function renderItem(identifier){
                 console.log(entry.title);
                 
         } else if(identifier === entry.title){
+            
             itemBox.innerHTML = `
 
                             <div class="note-container">
@@ -589,6 +598,9 @@ function editEntry(identifier){
 
             itemBox.innerHTML = ""
             inputField.value = `${entry.title}-- ${entry.text}`;
+            if(entry.text.length > 150){
+                inputField.style.height = "600px"
+            }
 
             //setting the cursor to star at end of text area
             inputField.setSelectionRange(inputField.value.length, inputField.value.length);
