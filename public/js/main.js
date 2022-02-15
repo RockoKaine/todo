@@ -2,6 +2,9 @@
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
 double check the help text
+
+text-area not scrollable
+neither is diplay if entry text too big
 */
 
 
@@ -26,7 +29,24 @@ let entries = [];
 let deletedEntries = [];
 
 
+// menu toggle
 
+function menuToggle(x) {
+    x.classList.toggle("change");
+    // right.classList.add('car')
+    if(!right.classList.contains('open-menu')){
+        right.classList.add('open-menu')
+        right.classList.remove('close-menu')
+        document.getElementById('home-btn').style.display = 'inline'
+        document.getElementById('right-container').style.display = 'inline'
+    } else if(right.classList.contains('open-menu')) {
+        right.classList.add('close-menu')
+        right.classList.remove('open-menu')
+        document.getElementById('home-btn').style.display = 'none'
+        document.getElementById('right-container').style.display = 'none'
+    }
+
+}
 
 
 document.addEventListener('keypress', e => {

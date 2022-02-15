@@ -310,8 +310,73 @@ growing box
 
 
 
-  @media (max-width: 450px) { 
-      body, html {
-          background: pink;
+/* this is for hamburger */
+
+.hamburger {
+    display: none;
+    cursor: pointer;
+  }
+  
+  .bar1, .bar2, .bar3 {
+    width: 35px;
+    height: 5px;
+    background-color: #333;
+    margin: 6px 0;
+    transition: 0.4s;
+  }
+  
+  .change .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+    transform: rotate(-45deg) translate(-9px, 6px);
+  }
+  
+  .change .bar2 {opacity: 0;}
+  
+  .change .bar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(45deg) translate(-8px, -8px);
+  }
+
+
+
+
+.open-menu{
+    animation: open-up 0.5s forwards;
+}
+.close-menu {
+    animation: close-up 0.5s forwards;
+}
+@keyframes open-up{
+    100%{width: 25%;}
+}
+@keyframes close-up{
+    0%{width: 25%;}
+    100%{width: 12%;}
+}
+
+
+
+  @media (max-width: 1000px) { 
+      .trash-links{
+          font-size: .75rem;
+      }
+   }
+  @media (max-width: 760px) { 
+    .hamburger {
+        display: inline-block;
+      }
+      #right{
+          width: 12%;
+      }
+      #right-container{
+          display: none;
+      }
+
+      #home-btn{
+          display: none;
+      }
+
+      #enter{
+          font-size: 1.25rem;
       }
    }
