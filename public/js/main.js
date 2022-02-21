@@ -8,7 +8,7 @@ tags should be a pop-up menu
 changing while in edit doesnt change edit are
 
 
-
+when you open close the hamburger the stuff disapears
 
 */
 
