@@ -1,14 +1,9 @@
 /*
 I wanna make it so when page loads we get a special boot up image like with terminal and ascii art
 
-double check the help text
 
-tags should be a pop-up menu
+double check help section and update it
 
-changing while in edit doesnt change edit are
-
-
-when you open close the hamburger the stuff disapears
 
 */
 
@@ -28,30 +23,11 @@ const trash = document.getElementById('trash');
 const inputForm = document.querySelector('.todo-form');
 const entryItemList = document.getElementById('entry-items');
 const inputField = document.getElementById('control-input');
-let trashedTitles = document.getElementsByClassName('trashed-title')
 
+let trashedTitles = document.getElementsByClassName('trashed-title')
 let entries = [];
 let deletedEntries = [];
 
-
-// menu toggle
-
-function menuToggle(x) {
-    x.classList.toggle("change");
-    // right.classList.add('car')
-    if(!right.classList.contains('open-menu')){
-        right.classList.add('open-menu')
-        right.classList.remove('close-menu')
-        document.getElementById('home-btn').style.display = 'inline'
-        document.getElementById('right-container').style.display = 'inline'
-    } else if(right.classList.contains('open-menu')) {
-        right.classList.add('close-menu')
-        right.classList.remove('open-menu')
-        document.getElementById('home-btn').style.display = 'none'
-        document.getElementById('right-container').style.display = 'none'
-    }
-
-}
 
 
 document.addEventListener('keypress', e => {
@@ -207,7 +183,7 @@ function renderHashtags (entries) {
 
     tagsSlim.forEach(tag =>{
         console.log('the tag hoe '+tag)
-        hashContainer.innerHTML += `<a href="#" onclick="hashTagFilter('${tag}')">${tag}</a><br>`;
+        hashContainer.innerHTML += `<a href="#" class="hashtag-right" onclick="hashTagFilter('${tag}')">${tag}</a><br>`;
     })
 
 }
@@ -234,6 +210,8 @@ function hashTagFilter(hashtag){
     filteredRes.forEach(entry =>{
 
         if(entry.completed){
+            inputField.value = '';
+
             itemBox.innerHTML += `
             <div class="item" data-key="${entry.id}">
                         <div  data-key="${entry.id}" onclick="renderItem(this.dataset.key)">
@@ -250,6 +228,7 @@ function hashTagFilter(hashtag){
             `
 
         }else {
+            inputField.value = '';
 
             itemBox.innerHTML += `
             <div class="item" data-key="${entry.id}">
@@ -700,4 +679,3 @@ function untrashEntry (identifier){
 renderHashtags(entries);
 
 window.onload = removeOldTrash();
-
