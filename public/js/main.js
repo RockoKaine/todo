@@ -80,27 +80,31 @@ const helpTxt = `
 
                     Commands:
 
-                    /help (At anytime return here for a list of commands)
+                    /delete My Title (This command allows you to delete the specified post)
+
+                    /emptytrash (Any items in the trash will be permanetly deleted)
+
+                    /untrash My Title (This command will remove the specified entry from the trash)
+
+                    /edit My Title (This command allows you to edit the specified entry)
+
+                    /rkaine My Title (This command can be used to open a specific entry)
 
                     /filter #SomeHashTag (Use this to filter through for entries with specific tags)
 
-                    /edit My Title (This command allows you to edit the specified post)
-
-                    /delete My Title (This command allows you to delete the specified post)
-
+                    /search Search query (Search all entries for your search query)
+                    
                     /home (Home Command will bring you back to the home page of all of your entries)
-
-                    /history (This will enlarge the history are of all your completed list)
-
+                    
+                    /help (At anytime return here for a list of commands)
+                    
                     Creating an entry:
 
-                    All titles must be unique, in the event you reuse a title the apropriate number will be appended. To title you entry type your desired text followed by -- (This is my Title--). Note a title is not required. If you do not specify a title it will be named Untitled.
+                    All titles should be unique, in the event you reuse a title the apropriate number will be appended. To title you entry type your desired text followed by -- (This is my Title--). Note a title is not required. If you do not specify a title it will be named Untitled.
                     
                     Anything after the -- Will be body text. If you did not give the entry a title anything you type will automatically be body text.
 
                     Inside of the body text you can use <li > to create a todo list, to create a list item type ** at the end of the previous list item i.e. <li This is one ** Now two ** And three etc. >. One  item list do not need ** <li One item >.
-                    
-                    If you have created an entry containing a todo list, and not a plain list, when you inspect your entry you will have boxes to check indicating you have completed that item. If all items have been checked the item will be moved to the completed section. Should you find you have prematurely completed your list you can find it in the completed section and unclick the appropriate box. It will be added back to your home area. Alternatively you can type the /uncomplete Your Title. This will uncheck the last task you check and return it to the home area.
 `
 
 
@@ -327,13 +331,11 @@ function submitHandler(){
                     break;
 
                 case '/edit':
-                    console.log('edit typed')
                     editEntry(event.target.elements[0].value.slice(6).trim())
                     
                     break;
                 case '/rkaine':
-                    console.log('edit typed')
-                    renderItem(event.target.elements[0].value.slice(6))
+                    renderItem(event.target.elements[0].value.slice(8).trim())
             inputField.value = "";
 
                     break;
